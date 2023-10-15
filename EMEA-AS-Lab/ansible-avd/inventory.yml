@@ -1,0 +1,36 @@
+---
+DC:
+  children:
+    DC_FABRIC:
+      vars:
+        #ansible_network_os: eos
+        ansible_connection: httpapi
+        #ansible_httpapi_user: arista
+        #ansible_httpapi_password: arista123
+        # ansible_ssh_pass: martin
+        ansible_httpapi_use_ssl: true
+        ansible_httpapi_validate_certs: false
+        ansible_httpapi_port: 443
+        ansible_user: arista
+        ansible_password: arista123
+        ansible_network_os: arista.eos.eos
+        # Configure privilege escalation
+        ansible_become: true
+        ansible_become_method: enable
+      children:
+        DC_SPINES:
+          hosts:
+            Spine1:
+              ansible_host: 172.17.100.1
+            Spine2:
+              ansible_host: 172.17.100.2
+        DC_LEAFS:
+          hosts:
+            Leaf1:
+              ansible_host: 172.17.100.3
+            Leaf2:
+              ansible_host: 172.17.100.4
+            Leaf3:
+              ansible_host: 172.17.100.5
+            Leaf4:
+              ansible_host: 172.17.100.6

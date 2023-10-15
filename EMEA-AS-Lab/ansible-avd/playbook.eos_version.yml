@@ -1,0 +1,12 @@
+- name: Collect EOS version
+  hosts: DC
+  gather_facts: false
+  tasks:
+    - name: Get switch EOS version
+      eos_command:
+        commands: "show version | grep image"
+      register: version
+
+    - name: Print switch EOS version
+      debug:
+        msg: " {{ inventory_hostname }} is running {{ version.stdout[0] }} "

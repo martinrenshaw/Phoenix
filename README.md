@@ -1,0 +1,2 @@
+# Phoenix
+The phoenix is a mythical eagle-like creature, generally known for bursting into flame at the end of their life, only to emerge from the ashes as a young phoenix. In both ancient Egyptian and Classical myth, the phoenix was associated with sun worship and was depicted as a large bird, with gold and red feathers that could live for hundreds of years. The phoenix was a symbol of immortality, eternity, and resurrection.

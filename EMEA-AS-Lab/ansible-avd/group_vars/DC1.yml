@@ -18,12 +18,19 @@ local_users:
     sha512_password: "$6$Dzu11L7yp9j3nCM9$FSptxMPyIL555OMO.ldnjDXgwZmrfMYwHSr0uznE5Qoqvd9a6UdjiFcJUhGLtvXVZR1r.A/iF5aAt50hf/EK4/"
 
 # Cloud Vision server information
-cvp_instance_ip: 10.255.0.1
+cvp_instance_ip: 10.155.0.1
 cvp_ingestauth_key: ''
 # cvp_ingestauth_key: telarista
 
+
+# # Management interface configuration | Required
+# mgmt_vrf_routing: < boolean | default -> false >
+# mgmt_interface: < mgmt_interface | default -> Management1 >
+mgmt_interface: Management0
+# mgmt_interface_vrf: < vrf_name | default -> MGMT >
+mgmt_interface_vrf: mgmt
 # OOB Management network default gateway.
-mgmt_gateway: 10.255.0.1
+mgmt_gateway: 172.17.0.1
 
 # dns servers.
 name_servers:

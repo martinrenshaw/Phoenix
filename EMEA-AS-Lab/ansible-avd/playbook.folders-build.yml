@@ -1,0 +1,12 @@
+- name: Build Switch configuration
+  hosts: DC1_FABRIC
+  connection: local
+  gather_facts: false
+  collections:
+    - arista.avd
+  
+  tasks:
+    - name: "Build local folders for output"
+      tags: [build]
+      import_role:
+        name: build_output_folders

@@ -1,0 +1,241 @@
+hostname: Leaf3
+router_bgp:
+  as: '65102'
+  router_id: 10.254.0.3
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  peer_groups:
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    password: q+VNViP5i4rVjW1cxFv2wA==
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+  address_family_ipv4:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  neighbors:
+  - ip_address: 10.252.0.1
+    peer_group: EVPN-OVERLAY-PEERS
+    description: Spine1
+    remote_as: '65001'
+  - ip_address: 10.252.0.2
+    peer_group: EVPN-OVERLAY-PEERS
+    description: Spine2
+    remote_as: '65001'
+  vrfs:
+  - name: Old_Gold_Ops
+    router_id: 10.254.0.3
+    rd: 10.254.0.3:10
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+    redistribute_routes:
+    - source_protocol: connected
+  vlan_aware_bundles:
+  - name: Old_Gold_Ops
+    rd: 10.254.0.3:10
+    route_targets:
+      both:
+      - '10:10'
+    redistribute_routes:
+    - learned
+    vlan: 12,110
+  - name: Tenant_A_VMOTION
+    tenant: Tenant_A
+    rd: 10.254.0.3:55160
+    route_targets:
+      both:
+      - 55160:55160
+    redistribute_routes:
+    - learned
+    vlan: '160'
+static_routes:
+- vrf: mgmt
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.17.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+ip_name_servers:
+- ip_address: 192.168.2.1
+  vrf: mgmt
+- ip_address: 8.8.8.8
+  vrf: mgmt
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$Df86J4/SFMDE3/1K$Hef4KstdoxNDaami37cBquTWOTplC.miMPjXVgQxMe92.e5wxlnXOLlebgPj8Fz1KO0za/RCO7ZIs4Q6Eiq1g1
+- name: ansible
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$Dzu11L7yp9j3nCM9$FSptxMPyIL555OMO.ldnjDXgwZmrfMYwHSr0uznE5Qoqvd9a6UdjiFcJUhGLtvXVZR1r.A/iF5aAt50hf/EK4/
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
+vrfs:
+- name: mgmt
+  ip_routing: false
+- name: Old_Gold_Ops
+  tenant: Tenant_A
+  ip_routing: true
+management_interfaces:
+- name: Management0
+  description: oob_management
+  shutdown: false
+  vrf: mgmt
+  ip_address: 172.17.100.5/16
+  gateway: 172.17.0.1
+  type: oob
+management_api_http:
+  enable_vrfs:
+  - name: mgmt
+  enable_https: true
+ethernet_interfaces:
+- name: Ethernet1
+  peer: Spine1
+  peer_interface: Ethernet3
+  peer_type: spine
+  description: P2P_LINK_TO_SPINE1_Ethernet3
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 10.255.0.9/31
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+- name: Ethernet2
+  peer: Spine2
+  peer_interface: Ethernet3
+  peer_type: spine
+  description: P2P_LINK_TO_SPINE2_Ethernet3
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 10.255.0.11/31
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+- name: Ethernet19
+  peer: host2
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Old_Gold_A
+  description: host2_Eth1
+  shutdown: false
+  type: switched
+  mode: trunk
+  vlans: 12,110,160
+  evpn_ethernet_segment:
+    identifier: 0000:0000:0101:0102:0044
+    redundancy: all-active
+    route_target: 01:01:01:02:00:44
+    designated_forwarder_election:
+      algorithm: preference
+      preference_value: 100
+loopback_interfaces:
+- name: Loopback0
+  description: EVPN_Overlay_Peering
+  shutdown: false
+  ip_address: 10.254.0.3/32
+  ospf_area: 0.0.0.0
+- name: Loopback1
+  description: VTEP_VXLAN_Tunnel_Source
+  shutdown: false
+  ip_address: 10.254.1.3/32
+  ospf_area: 0.0.0.0
+- name: Loopback100
+  description: Old_Gold_Ops_VTEP_DIAGNOSTICS
+  shutdown: false
+  vrf: Old_Gold_Ops
+  ip_address: 10.255.1.3/32
+router_ospf:
+  process_ids:
+  - id: 100
+    passive_interface_default: true
+    router_id: 10.254.0.3
+    max_lsa: 12000
+    no_passive_interfaces:
+    - Ethernet1
+    - Ethernet2
+    bfd_enable: false
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
+vlans:
+- id: 12
+  name: Old_Gold_Ops_Zone_Test
+  tenant: Tenant_A
+- id: 110
+  name: Old_Gold_Ops_Zone_1
+  tenant: Tenant_A
+- id: 160
+  name: Tenant_A_VMOTION
+  tenant: Tenant_A
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+vlan_interfaces:
+- name: Vlan12
+  tenant: Tenant_A
+  tags:
+  - opzone
+  description: Old_Gold_Ops_Zone_Test
+  shutdown: false
+  vrf: Old_Gold_Ops
+- name: Vlan110
+  tenant: Tenant_A
+  tags:
+  - opzone
+  description: Old_Gold_Ops_Zone_1
+  shutdown: false
+  vrf: Old_Gold_Ops
+vxlan_interface:
+  Vxlan1:
+    description: Leaf3_VTEP
+    vxlan:
+      udp_port: 4789
+      source_interface: Loopback1
+      vlans:
+      - id: 12
+        vni: 10012
+      - id: 110
+        vni: 10110
+      - id: 160
+        vni: 55160
+      vrfs:
+      - name: Old_Gold_Ops
+        vni: 10
+virtual_source_nat_vrfs:
+- name: Old_Gold_Ops
+  ip_address: 10.255.1.3

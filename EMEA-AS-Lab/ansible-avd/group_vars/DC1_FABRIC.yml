@@ -35,15 +35,15 @@ mlag_ips:
   mlag_peer: 10.253.1.0/24
 
 # Enable vlan aware bundles
-vxlan_vlan_aware_bundles: true
+evpn_vlan_aware_bundles: true
 
 # bgp peer groups passwords
 bgp_peer_groups:
-  IPv4_UNDERLAY_PEERS:
+  ipv4_underlay_peers:
     password: "AQQvKeimxJu+uGQ/yYvv9w=="
-  EVPN_OVERLAY_PEERS:
+  evpn_overlay_peers:
     password: "q+VNViP5i4rVjW1cxFv2wA=="
-  MLAG_IPv4_UNDERLAY_PEER:
+  mlag_ipv4_underlay_peer:
     password: "vnEaG8gMeQf3d3cN6PktXQ=="
 
 # Spine Switches
@@ -51,14 +51,14 @@ spine:
   defaults:
     loopback_ipv4_pool: 10.252.0.0/24
     bgp_as: 65001
-  platform: cEOS-LAB
+    platform: cEOS-LAB
   # defines the range of acceptable remote ASNs from leaf switches
-  leaf_as_range: 65101-65132
+  #leaf_as_range: 65101-65132
   nodes:
-    DC1-SPINE1:
+    Spine1:
       id: 1
       mgmt_ip: 172.17.100.1/16
-    DC1-SPINE2:
+    Spine2:
       id: 2
       mgmt_ip: 172.17.100.2/16
 
@@ -73,41 +73,47 @@ l3leaf:
     virtual_router_mac_address: 00:1c:73:00:dc:01
     platform: cEOS-LAB
     bgp_as: 65100
-    uplink_switches: [DC1-SPINE1, DC1-SPINE2]
+    uplink_switches: [Spine1, Spine2]
     uplink_interfaces: [Ethernet1, Ethernet2] # leaf interfaces - lx-e1 - lx-e2 - positional var ties in with uplink_switch_interfaces
     mlag_interfaces: [Ethernet10, Ethernet11]
     spanning_tree_priority: 4096
     spanning_tree_mode: mstp
-    loopback_ipv4_pool: 192.0.225.0/24
+    loopback_ipv4_pool: 10.254.0.0/24
+    vtep_loopback_ipv4_pool: 10.254.1.0/24
+    uplink_ipv4_pool: 10.255.0.0/24
   node_groups:
     DC1_LEAF1-2:
-      mlag_peer_ipv4_pool: 10.255.252.0/24
-      mlag_peer_l3_ipv4_pool: 10.255.251.0/24
-      vtep_loopback_ipv4_pool: 192.0.254.0/24
+      mlag_peer_ipv4_pool: 10.253.2.0/24
+      mlag_peer_l3_ipv4_pool: 10.253.0.0/24
+      filter:
+        tenants: [ Tenant_A ]
+        tags: [ opzone, vmotion ]
       bgp_as: 65101
       nodes:
-        DC1-LEAF1:
-          id: 1
-          mgmt_ip: 192.168.0.12/24
+        Leaf1:
+          id: 10 # will affect loopback , RID & RD allocations
+          mgmt_ip: 172.17.100.3/16
           uplink_switch_interfaces: [Ethernet1, Ethernet1] # spine interfaces - s1-e1 - s2-e1
-        DC1-LEAF2:
+        Leaf2:
           id: 2
-          mgmt_ip: 192.168.0.13/24
+          mgmt_ip: 172.17.100.4/16
           uplink_switch_interfaces: [Ethernet2, Ethernet2] # spine interfaces - s1-e2 - s2-e2
-    # DC1_LEAF3-4:
-    #   mlag_peer_ipv4_pool: 10.255.252.0/24
-    #   mlag_peer_l3_ipv4_pool: 10.255.251.0/24
-    #   vtep_loopback_ipv4_pool: 192.0.254.0/24
-    #   bgp_as: 65102
-    #   nodes:
-    #     DC1-LEAF3:
-    #       id: 3
-    #       mgmt_ip: 192.168.0.14/24
-    #       spine_interfaces: [Ethernet4, Ethernet4]
-    #     DC1-LEAF4:
-    #       id: 4
-    #       mgmt_ip: 192.168.0.15/24
-    #       spine_interfaces: [Ethernet5, Ethernet5]
+    DC1_LEAF3-4:
+      filter:
+        tenants: [ Tenant_A ]
+        tags: [ opzone, vmotion ]
+      nodes:
+        mlag: false
+        Leaf3:
+          id: 3
+          mgmt_ip: 172.17.100.5/16
+          uplink_switch_interfaces: [Ethernet3, Ethernet3]
+          bgp_as: 65102
+        Leaf4:
+          id: 4
+          mgmt_ip: 172.17.100.6/16
+          uplink_switch_interfaces: [Ethernet4, Ethernet4]
+          bgp_as: 65103
 
 # l2leaf:
 #   defaults:

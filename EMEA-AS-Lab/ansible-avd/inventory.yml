@@ -21,7 +21,7 @@ DC1:
               ansible_host: 172.17.100.1
             Spine2:
               ansible_host: 172.17.100.2
-        DC1_LEAFS:
+        DC1_L3LEAFS:
           hosts:
             Leaf1:
               ansible_host: 172.17.100.3
@@ -31,3 +31,10 @@ DC1:
               ansible_host: 172.17.100.5
             Leaf4:
               ansible_host: 172.17.100.6
+    DC1_TENANTS_NETWORKS:
+      children:
+        DC1_L3LEAFS:
+        
+    DC1_SERVERS:
+      children:
+        DC1_L3LEAFS:

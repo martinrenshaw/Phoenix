@@ -1,0 +1,161 @@
+hostname: Spine2
+router_bgp:
+  as: '65001'
+  router_id: 10.252.0.2
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  peer_groups:
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    password: q+VNViP5i4rVjW1cxFv2wA==
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+    next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  neighbors:
+  - ip_address: 10.254.0.10
+    peer_group: EVPN-OVERLAY-PEERS
+    description: Leaf1
+    remote_as: '65101'
+  - ip_address: 10.254.0.2
+    peer_group: EVPN-OVERLAY-PEERS
+    description: Leaf2
+    remote_as: '65101'
+  - ip_address: 10.254.0.3
+    peer_group: EVPN-OVERLAY-PEERS
+    description: Leaf3
+    remote_as: '65102'
+  - ip_address: 10.254.0.4
+    peer_group: EVPN-OVERLAY-PEERS
+    description: Leaf4
+    remote_as: '65103'
+static_routes:
+- vrf: mgmt
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.17.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+ip_name_servers:
+- ip_address: 192.168.2.1
+  vrf: mgmt
+- ip_address: 8.8.8.8
+  vrf: mgmt
+spanning_tree:
+  mode: none
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$Df86J4/SFMDE3/1K$Hef4KstdoxNDaami37cBquTWOTplC.miMPjXVgQxMe92.e5wxlnXOLlebgPj8Fz1KO0za/RCO7ZIs4Q6Eiq1g1
+- name: ansible
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$Dzu11L7yp9j3nCM9$FSptxMPyIL555OMO.ldnjDXgwZmrfMYwHSr0uznE5Qoqvd9a6UdjiFcJUhGLtvXVZR1r.A/iF5aAt50hf/EK4/
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
+vrfs:
+- name: mgmt
+  ip_routing: false
+management_interfaces:
+- name: Management0
+  description: oob_management
+  shutdown: false
+  vrf: mgmt
+  ip_address: 172.17.100.2/16
+  gateway: 172.17.0.1
+  type: oob
+management_api_http:
+  enable_vrfs:
+  - name: mgmt
+  enable_https: true
+ethernet_interfaces:
+- name: Ethernet1
+  peer: Leaf1
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF1_Ethernet2
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 10.255.0.38/31
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+- name: Ethernet2
+  peer: Leaf2
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF2_Ethernet2
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 10.255.0.6/31
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+- name: Ethernet3
+  peer: Leaf3
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF3_Ethernet2
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 10.255.0.10/31
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+- name: Ethernet4
+  peer: Leaf4
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF4_Ethernet2
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 10.255.0.14/31
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+loopback_interfaces:
+- name: Loopback0
+  description: EVPN_Overlay_Peering
+  shutdown: false
+  ip_address: 10.252.0.2/32
+  ospf_area: 0.0.0.0
+router_ospf:
+  process_ids:
+  - id: 100
+    passive_interface_default: true
+    router_id: 10.252.0.2
+    max_lsa: 12000
+    no_passive_interfaces:
+    - Ethernet1
+    - Ethernet2
+    - Ethernet3
+    - Ethernet4
+    bfd_enable: false
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3

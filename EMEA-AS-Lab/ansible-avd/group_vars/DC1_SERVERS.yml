@@ -1,29 +1,36 @@
 ---
+# Endpoint connectivity in the online Docs
+
 port_profiles:
-  TENANT_A_B:
+  Old_Gold_A_B:
     mode: trunk
     vlans: "12,210-211"
-  TENANT_A:
-    mode: access
-    vlans: "12"
-  TENANT_B:
+  Old_Gold_A:
+    mode: trunk
+    vlans: "12,110,160"
+  Old_Gold_B:
     mode: trunk
     vlans: "210-211"
 
 servers:
-  server01:
-    rack: RackA
+  host1:
+    rack: rack01
     adapters:
-      - type: nic
-        server_ports: [Eth0]
-        switch_ports: [Ethernet4]
-        switches: [DC1-LEAF1A]
-        profile: TENANT_A
-  server02:
-    rack: RackA
+      - endpoint_ports: [Eth1, Eth2]
+        switch_ports: [Ethernet19, Ethernet20]
+        switches: [Leaf1, Leaf2]
+        profile: Old_Gold_A
+        port_channel:
+          description: PortChannel3
+          mode: active
+          
+  host2:
+    rack: rack01
     adapters:
-      - type: nic
-        server_ports: [Eth0]
-        switch_ports: [Ethernet4]
-        switches: [DC1-LEAF2A]
-        profile: TENANT_A
+      - endpoint_ports: [Eth1, Eth2]
+        switch_ports: [Ethernet19, Ethernet20]
+        switches: [Leaf3, Leaf4]
+        profile: Old_Gold_A
+        ethernet_segment:
+          short_esi: 0101:0102:0044
+          redundancy: all-active

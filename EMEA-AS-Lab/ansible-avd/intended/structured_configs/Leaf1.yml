@@ -1,7 +1,7 @@
 hostname: Leaf1
 router_bgp:
   as: '65101'
-  router_id: 10.254.0.10
+  router_id: 10.254.0.1
   bgp:
     default:
       ipv4_unicast: false
@@ -49,8 +49,8 @@ router_bgp:
     remote_as: '65001'
   vrfs:
   - name: Old_Gold_Ops
-    router_id: 10.254.0.10
-    rd: 10.254.0.10:10
+    router_id: 10.254.0.1
+    rd: 10.254.0.1:10
     route_targets:
       import:
       - address_family: evpn
@@ -63,28 +63,28 @@ router_bgp:
     redistribute_routes:
     - source_protocol: connected
     neighbors:
-    - ip_address: 10.253.0.19
+    - ip_address: 10.253.0.1
       peer_group: MLAG-IPv4-UNDERLAY-PEER
     updates:
       wait_install: true
   vlan_aware_bundles:
   - name: Old_Gold_Ops
-    rd: 10.254.0.10:10
+    rd: 10.254.0.1:10
     route_targets:
       both:
       - '10:10'
     redistribute_routes:
     - learned
     vlan: 12,110
-  - name: Tenant_A_VMOTION
+  - name: Tenant_A_client_l2_only
     tenant: Tenant_A
-    rd: 10.254.0.10:55160
+    rd: 10.254.0.1:10010
     route_targets:
       both:
-      - 55160:55160
+      - 10010:10010
     redistribute_routes:
     - learned
-    vlan: '160'
+    vlan: '10'
 static_routes:
 - vrf: mgmt
   destination_address_prefix: 0.0.0.0/0
@@ -116,6 +116,10 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$Dzu11L7yp9j3nCM9$FSptxMPyIL555OMO.ldnjDXgwZmrfMYwHSr0uznE5Qoqvd9a6UdjiFcJUhGLtvXVZR1r.A/iF5aAt50hf/EK4/
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$NZbqb9T.KM9Y9OIt$63BRX5bMHOroTNv4nA.fdG858fl39XDAbJo1Ac8ekfodqVEhD74CXa2R.KOKw80ROYGIEAihEi3Zehx/m228d/
 - name: cvpadmin
   privilege: 15
   role: network-admin
@@ -160,21 +164,21 @@ vlans:
   trunk_groups:
   - LEAF_PEER_L3
   tenant: Tenant_A
-- id: 160
-  name: Tenant_A_VMOTION
+- id: 10
+  name: Tenant_A_client_l2_only
   tenant: Tenant_A
 vlan_interfaces:
 - name: Vlan4093
   description: MLAG_PEER_L3_PEERING
   shutdown: false
   mtu: 1500
-  ip_address: 10.253.0.18/31
+  ip_address: 10.253.0.0/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
 - name: Vlan4094
   description: MLAG_PEER
   shutdown: false
-  ip_address: 10.253.2.18/31
+  ip_address: 10.253.2.0/31
   no_autostate: true
   mtu: 1500
 - name: Vlan12
@@ -198,7 +202,7 @@ vlan_interfaces:
   description: 'MLAG_PEER_L3_iBGP: vrf Old_Gold_Ops'
   vrf: Old_Gold_Ops
   mtu: 1500
-  ip_address: 10.253.0.18/31
+  ip_address: 10.253.0.0/31
 port_channel_interfaces:
 - name: Port-Channel10
   description: MLAG_PEER_Leaf2_Po10
@@ -213,7 +217,7 @@ port_channel_interfaces:
   type: switched
   shutdown: false
   mode: trunk
-  vlans: 12,110,160
+  vlans: 10,12,110,160
   mlag: 19
 ethernet_interfaces:
 - name: Ethernet10
@@ -244,7 +248,7 @@ ethernet_interfaces:
   shutdown: false
   mtu: 1500
   type: routed
-  ip_address: 10.255.0.37/31
+  ip_address: 10.255.0.1/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
 - name: Ethernet2
@@ -255,7 +259,7 @@ ethernet_interfaces:
   shutdown: false
   mtu: 1500
   type: routed
-  ip_address: 10.255.0.39/31
+  ip_address: 10.255.0.3/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
 - name: Ethernet19
@@ -272,7 +276,7 @@ ethernet_interfaces:
 mlag_configuration:
   domain_id: DC1_LEAF1-2
   local_interface: Vlan4094
-  peer_address: 10.253.2.19
+  peer_address: 10.253.2.1
   peer_link: Port-Channel10
   reload_delay_mlag: '300'
   reload_delay_non_mlag: '330'
@@ -280,23 +284,23 @@ loopback_interfaces:
 - name: Loopback0
   description: EVPN_Overlay_Peering
   shutdown: false
-  ip_address: 10.254.0.10/32
+  ip_address: 10.254.0.1/32
   ospf_area: 0.0.0.0
 - name: Loopback1
   description: VTEP_VXLAN_Tunnel_Source
   shutdown: false
-  ip_address: 10.254.1.10/32
+  ip_address: 10.254.1.1/32
   ospf_area: 0.0.0.0
 - name: Loopback100
   description: Old_Gold_Ops_VTEP_DIAGNOSTICS
   shutdown: false
   vrf: Old_Gold_Ops
-  ip_address: 10.255.1.10/32
+  ip_address: 10.255.1.1/32
 router_ospf:
   process_ids:
   - id: 100
     passive_interface_default: true
-    router_id: 10.254.0.10
+    router_id: 10.254.0.1
     max_lsa: 12000
     no_passive_interfaces:
     - Ethernet1
@@ -331,11 +335,11 @@ vxlan_interface:
         vni: 10012
       - id: 110
         vni: 10110
-      - id: 160
-        vni: 55160
+      - id: 10
+        vni: 10010
       vrfs:
       - name: Old_Gold_Ops
         vni: 10
 virtual_source_nat_vrfs:
 - name: Old_Gold_Ops
-  ip_address: 10.255.1.10
+  ip_address: 10.255.1.1

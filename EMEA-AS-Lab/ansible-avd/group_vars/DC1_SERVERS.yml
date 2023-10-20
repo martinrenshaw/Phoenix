@@ -7,7 +7,7 @@ port_profiles:
     vlans: "12,210-211"
   Old_Gold_A:
     mode: trunk
-    vlans: "12,110,160"
+    vlans: "10,12,110,160"
   Old_Gold_B:
     mode: trunk
     vlans: "210-211"
@@ -31,6 +31,8 @@ servers:
         switch_ports: [Ethernet19, Ethernet20]
         switches: [Leaf3, Leaf4]
         profile: Old_Gold_A
+        port_channel:
+          mode: active
         ethernet_segment:
           short_esi: 0101:0102:0044
           redundancy: all-active

@@ -91,7 +91,7 @@ l3leaf:
       bgp_as: 65101
       nodes:
         Leaf1:
-          id: 10 # will affect loopback , RID & RD allocations
+          id: 1 # will affect loopback , RID & RD allocations
           mgmt_ip: 172.17.100.3/16
           uplink_switch_interfaces: [Ethernet1, Ethernet1] # spine interfaces - s1-e1 - s2-e1
         Leaf2:
@@ -174,3 +174,9 @@ bfd_multihop:
   interval: 1200
   min_rx: 1200
   multiplier: 3
+
+
+## Options for the eos_snapshot module
+root_dir: '{{ inventory_dir }}'
+snapshots_backup_dir_name: 'snapshots'
+snapshots_backup_dir: '{{ root_dir }}/{{ snapshots_backup_dir_name }}'

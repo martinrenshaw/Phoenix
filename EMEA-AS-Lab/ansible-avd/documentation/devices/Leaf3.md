@@ -19,6 +19,7 @@
   - [VLANs Device Configuration](#vlans-device-configuration)
 - [Interfaces](#interfaces)
   - [Ethernet Interfaces](#ethernet-interfaces)
+  - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
   - [VLAN Interfaces](#vlan-interfaces)
   - [VXLAN Interface](#vxlan-interface)
@@ -122,6 +123,7 @@ management api http-commands
 | ---- | --------- | ---- | -------- | ----- |
 | admin | 15 | network-admin | False | - |
 | ansible | 15 | network-admin | False | - |
+| arista | 15 | network-admin | False | - |
 | cvpadmin | 15 | network-admin | False | - |
 
 #### Local Users Device Configuration
@@ -130,6 +132,7 @@ management api http-commands
 !
 username admin privilege 15 role network-admin secret sha512 <removed>
 username ansible privilege 15 role network-admin secret sha512 <removed>
+username arista privilege 15 role network-admin secret sha512 <removed>
 username cvpadmin privilege 15 role network-admin secret sha512 <removed>
 ```
 
@@ -174,22 +177,22 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
+| 10 | Tenant_A_client_l2_only | - |
 | 12 | Old_Gold_Ops_Zone_Test | - |
 | 110 | Old_Gold_Ops_Zone_1 | - |
-| 160 | Tenant_A_VMOTION | - |
 
 ### VLANs Device Configuration
 
 ```eos
+!
+vlan 10
+   name Tenant_A_client_l2_only
 !
 vlan 12
    name Old_Gold_Ops_Zone_Test
 !
 vlan 110
    name Old_Gold_Ops_Zone_1
-!
-vlan 160
-   name Tenant_A_VMOTION
 ```
 
 ## Interfaces
@@ -202,7 +205,7 @@ vlan 160
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet19 |  host2_Eth1 | trunk | 12,110,160 | - | - | - |
+| Ethernet19 | host2_Eth1 | *trunk | *10,12,110,160 | *- | *- | 19 |
 
 *Inherited from Port-Channel Interface
 
@@ -212,20 +215,6 @@ vlan 160
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1 | P2P_LINK_TO_SPINE1_Ethernet3 | routed | - | 10.255.0.9/31 | default | 1500 | False | - | - |
 | Ethernet2 | P2P_LINK_TO_SPINE2_Ethernet3 | routed | - | 10.255.0.11/31 | default | 1500 | False | - | - |
-
-##### EVPN Multihoming
-
-####### EVPN Multihoming Summary
-
-| Interface | Ethernet Segment Identifier | Multihoming Redundancy Mode | Route Target |
-| --------- | --------------------------- | --------------------------- | ------------ |
-| Ethernet19 | 0000:0000:0101:0102:0044 | all-active | 01:01:01:02:00:44 |
-
-####### Designated Forwarder Election Summary
-
-| Interface | Algorithm | Preference Value | Dont Preempt | Hold time | Subsequent Hold Time | Candidate Reachability Required |
-| --------- | --------- | ---------------- | ------------ | --------- | -------------------- | ------------------------------- |
-| Ethernet19 | preference | 100 | False | - | - | False |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -252,14 +241,42 @@ interface Ethernet2
 interface Ethernet19
    description host2_Eth1
    no shutdown
-   switchport trunk allowed vlan 12,110,160
-   switchport mode trunk
+   channel-group 19 mode active
+```
+
+### Port-Channel Interfaces
+
+#### Port-Channel Interfaces Summary
+
+##### L2
+
+| Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel19 | host2 | switched | trunk | 10,12,110,160 | - | - | - | - | - | 0000:0000:0101:0102:0044 |
+
+##### EVPN Multihoming
+
+####### EVPN Multihoming Summary
+
+| Interface | Ethernet Segment Identifier | Multihoming Redundancy Mode | Route Target |
+| --------- | --------------------------- | --------------------------- | ------------ |
+| Port-Channel19 | 0000:0000:0101:0102:0044 | all-active | 01:01:01:02:00:44 |
+
+#### Port-Channel Interfaces Device Configuration
+
+```eos
+!
+interface Port-Channel19
+   description host2
+   no shutdown
    switchport
+   switchport trunk allowed vlan 10,12,110,160
+   switchport mode trunk
    evpn ethernet-segment
       identifier 0000:0000:0101:0102:0044
       redundancy all-active
-      designated-forwarder election algorithm preference 100
       route-target import 01:01:01:02:00:44
+   lacp system-id 0101.0102.0044
 ```
 
 ### Loopback Interfaces
@@ -350,9 +367,9 @@ interface Vlan110
 
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
+| 10 | 10010 | - | - |
 | 12 | 10012 | - | - |
 | 110 | 10110 | - | - |
-| 160 | 55160 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
 
@@ -368,9 +385,9 @@ interface Vxlan1
    description Leaf3_VTEP
    vxlan source-interface Loopback1
    vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
    vxlan vlan 12 vni 10012
    vxlan vlan 110 vni 10110
-   vxlan vlan 160 vni 55160
    vxlan vrf Old_Gold_Ops vni 10
 ```
 
@@ -518,7 +535,7 @@ router ospf 100
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
 | Old_Gold_Ops | 10.254.0.3:10 | 10:10 | - | - | learned | 12,110 |
-| Tenant_A_VMOTION | 10.254.0.3:55160 | 55160:55160 | - | - | learned | 160 |
+| Tenant_A_client_l2_only | 10.254.0.3:10010 | 10010:10010 | - | - | learned | 10 |
 
 #### Router BGP VRFs
 
@@ -555,11 +572,11 @@ router bgp 65102
       redistribute learned
       vlan 12,110
    !
-   vlan-aware-bundle Tenant_A_VMOTION
-      rd 10.254.0.3:55160
-      route-target both 55160:55160
+   vlan-aware-bundle Tenant_A_client_l2_only
+      rd 10.254.0.3:10010
+      route-target both 10010:10010
       redistribute learned
-      vlan 160
+      vlan 10
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate

@@ -2,6 +2,11 @@
 # Validation lab
 # local users
 local_users:
+  arista:
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$NZbqb9T.KM9Y9OIt$63BRX5bMHOroTNv4nA.fdG858fl39XDAbJo1Ac8ekfodqVEhD74CXa2R.KOKw80ROYGIEAihEi3Zehx/m228d/"
+  
   admin:
     privilege: 15
     role: network-admin

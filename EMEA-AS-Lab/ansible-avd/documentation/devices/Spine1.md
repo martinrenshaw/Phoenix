@@ -111,6 +111,7 @@ management api http-commands
 | ---- | --------- | ---- | -------- | ----- |
 | admin | 15 | network-admin | False | - |
 | ansible | 15 | network-admin | False | - |
+| arista | 15 | network-admin | False | - |
 | cvpadmin | 15 | network-admin | False | - |
 
 #### Local Users Device Configuration
@@ -119,6 +120,7 @@ management api http-commands
 !
 username admin privilege 15 role network-admin secret sha512 <removed>
 username ansible privilege 15 role network-admin secret sha512 <removed>
+username arista privilege 15 role network-admin secret sha512 <removed>
 username cvpadmin privilege 15 role network-admin secret sha512 <removed>
 ```
 
@@ -167,7 +169,7 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_LEAF1_Ethernet1 | routed | - | 10.255.0.36/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_LINK_TO_LEAF1_Ethernet1 | routed | - | 10.255.0.0/31 | default | 1500 | False | - | - |
 | Ethernet2 | P2P_LINK_TO_LEAF2_Ethernet1 | routed | - | 10.255.0.4/31 | default | 1500 | False | - | - |
 | Ethernet3 | P2P_LINK_TO_LEAF3_Ethernet1 | routed | - | 10.255.0.8/31 | default | 1500 | False | - | - |
 | Ethernet4 | P2P_LINK_TO_LEAF4_Ethernet1 | routed | - | 10.255.0.12/31 | default | 1500 | False | - | - |
@@ -181,7 +183,7 @@ interface Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 10.255.0.36/31
+   ip address 10.255.0.0/31
    ip ospf network point-to-point
    ip ospf area 0.0.0.0
 !
@@ -357,10 +359,10 @@ router ospf 100
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
+| 10.254.0.1 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 10.254.0.2 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 10.254.0.3 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 10.254.0.4 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
-| 10.254.0.10 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -387,6 +389,9 @@ router bgp 65001
    neighbor EVPN-OVERLAY-PEERS password 7 <removed>
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor 10.254.0.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.254.0.1 remote-as 65101
+   neighbor 10.254.0.1 description Leaf1
    neighbor 10.254.0.2 peer group EVPN-OVERLAY-PEERS
    neighbor 10.254.0.2 remote-as 65101
    neighbor 10.254.0.2 description Leaf2
@@ -396,9 +401,6 @@ router bgp 65001
    neighbor 10.254.0.4 peer group EVPN-OVERLAY-PEERS
    neighbor 10.254.0.4 remote-as 65103
    neighbor 10.254.0.4 description Leaf4
-   neighbor 10.254.0.10 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.254.0.10 remote-as 65101
-   neighbor 10.254.0.10 description Leaf1
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate

@@ -83,11 +83,11 @@ tenants:
   #           enabled: true
   #           ip_subnet: 10.1.40.0/24
     l2vlans:
-      160:
-        vni_override: 55160
-        name: Tenant_A_VMOTION
+      10:
+        name: Tenant_A_client_l2_only
         tags: [vmotion]
       161:
+        vni_override: 550161
         name: Tenant_A_NFS
         tags: [nfs]
 

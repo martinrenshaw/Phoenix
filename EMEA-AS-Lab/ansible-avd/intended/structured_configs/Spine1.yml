@@ -29,7 +29,7 @@ router_bgp:
     - name: EVPN-OVERLAY-PEERS
       activate: true
   neighbors:
-  - ip_address: 10.254.0.10
+  - ip_address: 10.254.0.1
     peer_group: EVPN-OVERLAY-PEERS
     description: Leaf1
     remote_as: '65101'
@@ -72,6 +72,10 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$Dzu11L7yp9j3nCM9$FSptxMPyIL555OMO.ldnjDXgwZmrfMYwHSr0uznE5Qoqvd9a6UdjiFcJUhGLtvXVZR1r.A/iF5aAt50hf/EK4/
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$NZbqb9T.KM9Y9OIt$63BRX5bMHOroTNv4nA.fdG858fl39XDAbJo1Ac8ekfodqVEhD74CXa2R.KOKw80ROYGIEAihEi3Zehx/m228d/
 - name: cvpadmin
   privilege: 15
   role: network-admin
@@ -100,7 +104,7 @@ ethernet_interfaces:
   shutdown: false
   mtu: 1500
   type: routed
-  ip_address: 10.255.0.36/31
+  ip_address: 10.255.0.0/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
 - name: Ethernet2

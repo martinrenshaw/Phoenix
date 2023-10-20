@@ -128,6 +128,7 @@ management api http-commands
 | ---- | --------- | ---- | -------- | ----- |
 | admin | 15 | network-admin | False | - |
 | ansible | 15 | network-admin | False | - |
+| arista | 15 | network-admin | False | - |
 | cvpadmin | 15 | network-admin | False | - |
 
 #### Local Users Device Configuration
@@ -136,6 +137,7 @@ management api http-commands
 !
 username admin privilege 15 role network-admin secret sha512 <removed>
 username ansible privilege 15 role network-admin secret sha512 <removed>
+username arista privilege 15 role network-admin secret sha512 <removed>
 username cvpadmin privilege 15 role network-admin secret sha512 <removed>
 ```
 
@@ -145,7 +147,7 @@ username cvpadmin privilege 15 role network-admin secret sha512 <removed>
 
 | Domain-id | Local-interface | Peer-address | Peer-link |
 | --------- | --------------- | ------------ | --------- |
-| DC1_LEAF1-2 | Vlan4094 | 10.253.2.18 | Port-Channel10 |
+| DC1_LEAF1-2 | Vlan4094 | 10.253.2.0 | Port-Channel10 |
 
 Dual primary detection is disabled.
 
@@ -156,7 +158,7 @@ Dual primary detection is disabled.
 mlag configuration
    domain-id DC1_LEAF1-2
    local-interface Vlan4094
-   peer-address 10.253.2.18
+   peer-address 10.253.2.0
    peer-link Port-Channel10
    reload-delay mlag 300
    reload-delay non-mlag 330
@@ -208,9 +210,9 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
+| 10 | Tenant_A_client_l2_only | - |
 | 12 | Old_Gold_Ops_Zone_Test | - |
 | 110 | Old_Gold_Ops_Zone_1 | - |
-| 160 | Tenant_A_VMOTION | - |
 | 3009 | MLAG_iBGP_Old_Gold_Ops | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
@@ -219,14 +221,14 @@ vlan internal order ascending range 1006 1199
 
 ```eos
 !
+vlan 10
+   name Tenant_A_client_l2_only
+!
 vlan 12
    name Old_Gold_Ops_Zone_Test
 !
 vlan 110
    name Old_Gold_Ops_Zone_1
-!
-vlan 160
-   name Tenant_A_VMOTION
 !
 vlan 3009
    name MLAG_iBGP_Old_Gold_Ops
@@ -253,7 +255,7 @@ vlan 4094
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet10 | MLAG_PEER_Leaf1_Ethernet10 | *trunk | *- | *- | *['LEAF_PEER_L3', 'MLAG'] | 10 |
 | Ethernet11 | MLAG_PEER_Leaf1_Ethernet11 | *trunk | *- | *- | *['LEAF_PEER_L3', 'MLAG'] | 10 |
-| Ethernet20 | host1_Eth2 | *trunk | *12,110,160 | *- | *- | 19 |
+| Ethernet20 | host1_Eth2 | *trunk | *10,12,110,160 | *- | *- | 19 |
 
 *Inherited from Port-Channel Interface
 
@@ -311,7 +313,7 @@ interface Ethernet20
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel10 | MLAG_PEER_Leaf1_Po10 | switched | trunk | - | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
-| Port-Channel19 | host1_PortChannel3 | switched | trunk | 12,110,160 | - | - | - | - | 19 | - |
+| Port-Channel19 | host1_PortChannel3 | switched | trunk | 10,12,110,160 | - | - | - | - | 19 | - |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -329,7 +331,7 @@ interface Port-Channel19
    description host1_PortChannel3
    no shutdown
    switchport
-   switchport trunk allowed vlan 12,110,160
+   switchport trunk allowed vlan 10,12,110,160
    switchport mode trunk
    mlag 19
 ```
@@ -343,7 +345,7 @@ interface Port-Channel19
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 10.254.0.2/32 |
-| Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 10.254.1.10/32 |
+| Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 10.254.1.1/32 |
 | Loopback100 | Old_Gold_Ops_VTEP_DIAGNOSTICS | Old_Gold_Ops | 10.255.1.2/32 |
 
 ##### IPv6
@@ -368,7 +370,7 @@ interface Loopback0
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
    no shutdown
-   ip address 10.254.1.10/32
+   ip address 10.254.1.1/32
    ip ospf area 0.0.0.0
 !
 interface Loopback100
@@ -396,9 +398,9 @@ interface Loopback100
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan12 |  Old_Gold_Ops  |  -  |  -  |  -  |  -  |  -  |  -  |
 | Vlan110 |  Old_Gold_Ops  |  -  |  -  |  -  |  -  |  -  |  -  |
-| Vlan3009 |  Old_Gold_Ops  |  10.253.0.19/31  |  -  |  -  |  -  |  -  |  -  |
-| Vlan4093 |  default  |  10.253.0.19/31  |  -  |  -  |  -  |  -  |  -  |
-| Vlan4094 |  default  |  10.253.2.19/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan3009 |  Old_Gold_Ops  |  10.253.0.1/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4093 |  default  |  10.253.0.1/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4094 |  default  |  10.253.2.1/31  |  -  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
 
@@ -419,13 +421,13 @@ interface Vlan3009
    no shutdown
    mtu 1500
    vrf Old_Gold_Ops
-   ip address 10.253.0.19/31
+   ip address 10.253.0.1/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
    no shutdown
    mtu 1500
-   ip address 10.253.0.19/31
+   ip address 10.253.0.1/31
    ip ospf network point-to-point
    ip ospf area 0.0.0.0
 !
@@ -434,7 +436,7 @@ interface Vlan4094
    no shutdown
    mtu 1500
    no autostate
-   ip address 10.253.2.19/31
+   ip address 10.253.2.1/31
 ```
 
 ### VXLAN Interface
@@ -451,9 +453,9 @@ interface Vlan4094
 
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
+| 10 | 10010 | - | - |
 | 12 | 10012 | - | - |
 | 110 | 10110 | - | - |
-| 160 | 55160 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
 
@@ -470,9 +472,9 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
    vxlan vlan 12 vni 10012
    vxlan vlan 110 vni 10110
-   vxlan vlan 160 vni 55160
    vxlan vrf Old_Gold_Ops vni 10
 ```
 
@@ -618,7 +620,7 @@ router ospf 100
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
 | 10.252.0.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 10.252.0.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
-| 10.253.0.18 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Old_Gold_Ops | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - |
+| 10.253.0.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Old_Gold_Ops | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -633,7 +635,7 @@ router ospf 100
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
 | Old_Gold_Ops | 10.254.0.2:10 | 10:10 | - | - | learned | 12,110 |
-| Tenant_A_VMOTION | 10.254.0.2:55160 | 55160:55160 | - | - | learned | 160 |
+| Tenant_A_client_l2_only | 10.254.0.2:10010 | 10010:10010 | - | - | learned | 10 |
 
 #### Router BGP VRFs
 
@@ -678,11 +680,11 @@ router bgp 65101
       redistribute learned
       vlan 12,110
    !
-   vlan-aware-bundle Tenant_A_VMOTION
-      rd 10.254.0.2:55160
-      route-target both 55160:55160
+   vlan-aware-bundle Tenant_A_client_l2_only
+      rd 10.254.0.2:10010
+      route-target both 10010:10010
       redistribute learned
-      vlan 160
+      vlan 10
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
@@ -697,7 +699,7 @@ router bgp 65101
       route-target export evpn 10:10
       router-id 10.254.0.2
       update wait-install
-      neighbor 10.253.0.18 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.253.0.0 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
 ```
 

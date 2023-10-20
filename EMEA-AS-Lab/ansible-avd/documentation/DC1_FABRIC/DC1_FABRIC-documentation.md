@@ -58,8 +58,8 @@
 
 | Node | Node Interface | Node IP Address | Peer Node | Peer Interface | Peer IP Address |
 | ---- | -------------- | --------------- | --------- | -------------- | --------------- |
-| Leaf1 | Ethernet1 | 10.255.0.37/31 | Spine1 | Ethernet1 | 10.255.0.36/31 |
-| Leaf1 | Ethernet2 | 10.255.0.39/31 | Spine2 | Ethernet1 | 10.255.0.38/31 |
+| Leaf1 | Ethernet1 | 10.255.0.1/31 | Spine1 | Ethernet1 | 10.255.0.0/31 |
+| Leaf1 | Ethernet2 | 10.255.0.3/31 | Spine2 | Ethernet1 | 10.255.0.2/31 |
 | Leaf2 | Ethernet1 | 10.255.0.5/31 | Spine1 | Ethernet2 | 10.255.0.4/31 |
 | Leaf2 | Ethernet2 | 10.255.0.7/31 | Spine2 | Ethernet2 | 10.255.0.6/31 |
 | Leaf3 | Ethernet1 | 10.255.0.9/31 | Spine1 | Ethernet3 | 10.255.0.8/31 |
@@ -78,7 +78,7 @@
 
 | POD | Node | Loopback0 |
 | --- | ---- | --------- |
-| DC1_FABRIC | Leaf1 | 10.254.0.10/32 |
+| DC1_FABRIC | Leaf1 | 10.254.0.1/32 |
 | DC1_FABRIC | Leaf2 | 10.254.0.2/32 |
 | DC1_FABRIC | Leaf3 | 10.254.0.3/32 |
 | DC1_FABRIC | Leaf4 | 10.254.0.4/32 |
@@ -95,7 +95,7 @@
 
 | POD | Node | Loopback1 |
 | --- | ---- | --------- |
-| DC1_FABRIC | Leaf1 | 10.254.1.10/32 |
-| DC1_FABRIC | Leaf2 | 10.254.1.10/32 |
+| DC1_FABRIC | Leaf1 | 10.254.1.1/32 |
+| DC1_FABRIC | Leaf2 | 10.254.1.1/32 |
 | DC1_FABRIC | Leaf3 | 10.254.1.3/32 |
 | DC1_FABRIC | Leaf4 | 10.254.1.4/32 |

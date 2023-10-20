@@ -1,0 +1,15 @@
+---
+- name: Manage Arista EOS EVPN/VXLAN Configuration
+  hosts: DC1_FABRIC
+  connection: local
+  gather_facts: false
+  collections:
+    - arista.avd
+  vars:
+    fabric_dir_name: "{{fabric_name}}"
+    execute_tasks: false
+  tasks:
+
+    - name: Validate state on EOS devices
+      ansible.builtin.import_role:
+        name: arista.avd.eos_validate_state

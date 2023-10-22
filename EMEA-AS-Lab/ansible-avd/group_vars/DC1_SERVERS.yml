@@ -2,37 +2,38 @@
 # Endpoint connectivity in the online Docs
 
 port_profiles:
-  Old_Gold_A_B:
+  Hosts1:
     mode: trunk
-    vlans: "12,210-211"
-  Old_Gold_A:
+    vlans: "10,12"
+  Hosts2:
     mode: trunk
-    vlans: "10,12,110,160"
+    vlans: "10,34"
   Old_Gold_B:
     mode: trunk
     vlans: "210-211"
 
 servers:
-  host1:
+  host01:
     rack: rack01
     adapters:
       - endpoint_ports: [Eth1, Eth2]
         switch_ports: [Ethernet19, Ethernet20]
         switches: [Leaf1, Leaf2]
-        profile: Old_Gold_A
+        profile: Hosts1
         port_channel:
-          description: PortChannel3
+          description: PortChannel to Host1
           mode: active
           
-  host2:
+  host02:
     rack: rack01
     adapters:
       - endpoint_ports: [Eth1, Eth2]
         switch_ports: [Ethernet19, Ethernet20]
         switches: [Leaf3, Leaf4]
-        profile: Old_Gold_A
+        profile: Hosts2
         port_channel:
           mode: active
+          description: PortChannel to Host2
         ethernet_segment:
           short_esi: 0101:0102:0044
           redundancy: all-active

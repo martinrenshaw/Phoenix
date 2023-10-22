@@ -48,7 +48,7 @@ router_bgp:
     description: Spine2
     remote_as: '65001'
   vrfs:
-  - name: Old_Gold_Ops
+  - name: GOLD
     router_id: 10.254.0.1
     rd: 10.254.0.1:10
     route_targets:
@@ -65,23 +65,30 @@ router_bgp:
     neighbors:
     - ip_address: 10.253.0.1
       peer_group: MLAG-IPv4-UNDERLAY-PEER
+    - ip_address: 10.12.12.50
+      remote_as: '64998'
+      description: bgp peering to host1
+    address_family_ipv4:
+      neighbors:
+      - ip_address: 10.12.12.50
+        activate: true
     updates:
       wait_install: true
   vlan_aware_bundles:
-  - name: Old_Gold_Ops
+  - name: GOLD
     rd: 10.254.0.1:10
     route_targets:
       both:
       - '10:10'
     redistribute_routes:
     - learned
-    vlan: 12,110
+    vlan: '12'
   - name: Tenant_A_client_l2_only
     tenant: Tenant_A
-    rd: 10.254.0.1:10010
+    rd: 10.254.0.1:30010
     route_targets:
       both:
-      - 10010:10010
+      - 30010:30010
     redistribute_routes:
     - learned
     vlan: '10'
@@ -127,7 +134,7 @@ local_users:
 vrfs:
 - name: mgmt
   ip_routing: false
-- name: Old_Gold_Ops
+- name: GOLD
   tenant: Tenant_A
   ip_routing: true
 management_interfaces:
@@ -154,13 +161,10 @@ vlans:
   trunk_groups:
   - MLAG
 - id: 12
-  name: Old_Gold_Ops_Zone_Test
-  tenant: Tenant_A
-- id: 110
-  name: Old_Gold_Ops_Zone_1
+  name: Gold_data
   tenant: Tenant_A
 - id: 3009
-  name: MLAG_iBGP_Old_Gold_Ops
+  name: MLAG_iBGP_GOLD
   trunk_groups:
   - LEAF_PEER_L3
   tenant: Tenant_A
@@ -184,23 +188,17 @@ vlan_interfaces:
 - name: Vlan12
   tenant: Tenant_A
   tags:
-  - opzone
-  description: Old_Gold_Ops_Zone_Test
+  - gold_data_12
+  description: Gold_data
   shutdown: false
-  vrf: Old_Gold_Ops
-- name: Vlan110
-  tenant: Tenant_A
-  tags:
-  - opzone
-  description: Old_Gold_Ops_Zone_1
-  shutdown: false
-  vrf: Old_Gold_Ops
+  ip_address_virtual: 10.12.12.1/24
+  vrf: GOLD
 - name: Vlan3009
   tenant: Tenant_A
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf Old_Gold_Ops'
-  vrf: Old_Gold_Ops
+  description: 'MLAG_PEER_L3_iBGP: vrf GOLD'
+  vrf: GOLD
   mtu: 1500
   ip_address: 10.253.0.0/31
 port_channel_interfaces:
@@ -213,11 +211,11 @@ port_channel_interfaces:
   - LEAF_PEER_L3
   - MLAG
 - name: Port-Channel19
-  description: host1_PortChannel3
+  description: host01_PortChannel to Host1
   type: switched
   shutdown: false
   mode: trunk
-  vlans: 10,12,110,160
+  vlans: 10,12
   mlag: 19
 ethernet_interfaces:
 - name: Ethernet10
@@ -263,11 +261,11 @@ ethernet_interfaces:
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
 - name: Ethernet19
-  peer: host1
+  peer: host01
   peer_interface: Eth1
   peer_type: server
-  port_profile: Old_Gold_A
-  description: host1_Eth1
+  port_profile: Hosts1
+  description: host01_Eth1
   shutdown: false
   type: port-channel-member
   channel_group:
@@ -280,6 +278,10 @@ mlag_configuration:
   peer_link: Port-Channel10
   reload_delay_mlag: '300'
   reload_delay_non_mlag: '330'
+  peer_address_heartbeat:
+    peer_ip: 172.17.100.4
+    vrf: mgmt
+  dual_primary_detection_delay: 5
 loopback_interfaces:
 - name: Loopback0
   description: EVPN_Overlay_Peering
@@ -292,9 +294,9 @@ loopback_interfaces:
   ip_address: 10.254.1.1/32
   ospf_area: 0.0.0.0
 - name: Loopback100
-  description: Old_Gold_Ops_VTEP_DIAGNOSTICS
+  description: GOLD_VTEP_DIAGNOSTICS
   shutdown: false
-  vrf: Old_Gold_Ops
+  vrf: GOLD
   ip_address: 10.255.1.1/32
 router_ospf:
   process_ids:
@@ -332,14 +334,12 @@ vxlan_interface:
       virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
       - id: 12
-        vni: 10012
-      - id: 110
-        vni: 10110
+        vni: 20012
       - id: 10
-        vni: 10010
+        vni: 20010
       vrfs:
-      - name: Old_Gold_Ops
+      - name: GOLD
         vni: 10
 virtual_source_nat_vrfs:
-- name: Old_Gold_Ops
+- name: GOLD
   ip_address: 10.255.1.1

@@ -76,6 +76,7 @@ l3leaf:
     uplink_switches: [Spine1, Spine2]
     uplink_interfaces: [Ethernet1, Ethernet2] # leaf interfaces - lx-e1 - lx-e2 - positional var ties in with uplink_switch_interfaces
     mlag_interfaces: [Ethernet10, Ethernet11]
+    mlag_dual_primary_detection: true
     spanning_tree_priority: 4096
     spanning_tree_mode: mstp
     loopback_ipv4_pool: 10.254.0.0/24
@@ -87,7 +88,7 @@ l3leaf:
       mlag_peer_l3_ipv4_pool: 10.253.0.0/24
       filter:
         tenants: [ Tenant_A ]
-        tags: [ opzone, vmotion ]
+        tags: [ gold_data_12, vmotion ]
       bgp_as: 65101
       nodes:
         Leaf1:
@@ -101,7 +102,7 @@ l3leaf:
     DC1_LEAF3-4:
       filter:
         tenants: [ Tenant_A ]
-        tags: [ opzone, vmotion ]
+        tags: [ gold_data_34, vmotion ]
       nodes:
         mlag: false
         Leaf3:

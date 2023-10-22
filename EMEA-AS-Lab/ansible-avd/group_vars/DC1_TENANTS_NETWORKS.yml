@@ -1,40 +1,93 @@
 ---
 # DC1 Tenants Networks
 # Network Services in the online Docs
+# Tenant provide a construct to group L3 VRFs and L2 VLANs.
 # Documentation of Tenant specific information - Vlans/VRFs
 tenants:
   # Tenant A Specific Information - VRFs / VLANs
   Tenant_A:
-    mac_vrf_vni_base: 10000
+    mac_vrf_vni_base: 20000
+    mac_vrf_id_base: 30000
     vrfs:
-      Old_Gold_Ops:
+      GOLD:
         vrf_vni: 10
         vtep_diagnostic:
           loopback: 100
           loopback_ip_range: 10.255.1.0/24
         svis:
           12:
-            name: Old_Gold_Ops_Zone_Test
-            tags: [opzone]
+            name: Gold_data
+            tags: [gold_data_12]
             enabled: true
-            # ip_subnet: 172.16.112.0/24
-          110:
-            name: Old_Gold_Ops_Zone_1
-            tags: [opzone]
+            ip_address_virtual: 10.12.12.1/24 # Anycast IP address configuration with  "ip address virtual"
+            # Leaf Ip address so that Host1 can for BGP peering to both.
+            # nodes:
+            #  Leaf1:
+            #   ip_address: 10.12.12.2/24
+            #  Leaf2:
+            #   ip_address: 10.12.12.3/24
+          34:
+            name: Gold_data
+            tags: [gold_data_34]
             enabled: true
-            # ip_subnet: 10.1.10.0/24
-          # 111:
-          #   vni_override: 50111
-          #   name: Old_Gold_Ops_Zone_2
-          #   tags: [opzone]
-          #   enabled: true
-          #   ip_subnet: 10.1.11.0/24
-          # 112:
-          #   vni_override: 50112
-          #   name: Old_Gold_Ops_Zone_3
-          #   tags: [opzone]
-          #   enabled: true
-          #   ip_subnet: 10.1.12.0/24
+            ip_address_virtual: 10.34.34.1/24
+
+            # Define node specific configuration, such as unique IP addresses.
+            # nodes:
+            #   < l3_leaf_inventory_hostname_1 >:
+            #     # device unique IP address for node.
+            #     ip_address: < IPv4_address/Mask >
+
+            #     # EOS CLI rendered directly on the VLAN interface in the final EOS configuration
+            #     # Overrides the setting on SVI level.
+            #     raw_eos_cli: |
+            #       < multiline eos cli >
+
+            #     # Custom structured config added under vlan_interfaces.<interface> for eos_cli_config_gen
+            #     # Overrides the setting on SVI level.
+            #     structured_config: < dictionary >
+
+            #   < l3_leaf_inventory_hostname_2 >:
+            #     ip_address: < IPv4_address/Mask >
+
+
+        # Dictionary of BGP peer definitions | Optional.
+        # This will configure BGP neighbors inside the tenant VRF for peering with external devices.
+        # The configured peer will automatically be activated for ipv4 or ipv6 address family based on the ip address.
+        # Note, only ipv4 and ipv6 address families are currently supported in eos_designs.
+        # For other address families, use custom_structured configuration with eos_cli_config_gen.
+        bgp_peers:
+          10.12.12.50:
+            remote_as: 64998
+            description: bgp peering to host1
+            nodes: [ Leaf1, Leaf2 ]
+          10.34.34.50:
+            remote_as: 64999
+            description: bgp peering to host2
+        #     password: < encrypted password >
+        #     send_community: < standard | extended | large | all >
+        #     next_hop_self: < true | false >
+        #     timers: < keepalive_hold_timer_values >
+        #     maximum_routes: < 0-4294967294 >
+        #     default_originate:
+        #       always: < true | false >
+        #     update_source: < interface >
+            ebgp_multihop: 3
+        #     # Nodes is required to restrict configuration of BGP neighbors to certain nodes in the network.
+            nodes: [ Leaf3, Leaf4 ]
+        #     # Next hop settings can be either ipv4 or ipv6 for one neighbor, this will be applied by a uniquely generated route-map per neighbor.
+        #     # Next hop takes precedence over route_map_out.
+        #     set_ipv4_next_hop: < IPv4_address >
+        #     set_ipv6_next_hop: < IPv6_address >
+        #     route_map_out: < route-map name >
+        #     route_map_in: < route-map name >
+        #     prefix_list_in: < prefix_list_name >
+        #     prefix_list_out: < prefix_list_name >
+            # local_as: 6510
+        #     weight: < 0-65535>
+        #     bfd: < true | false >
+
+
       Old_Gold_WEB_Zone:
         vrf_vni: 11
         svis:
@@ -48,97 +101,13 @@ tenants:
   #           tags: [web]
   #           enabled: true
   #           ip_subnet: 10.1.21.0/24
-  # #     Tenant_A_APP_Zone:
-  #       vrf_vni: 12
-  #       svis:
-  #         130:
-  #           name: Tenant_A_APP_Zone_1
-  #           tags: [app, erp1]
-  #           enabled: true
-  #           ip_subnet: 10.1.30.0/24
-  #         131:
-  #           name: Tenant_A_APP_Zone_2
-  #           tags: [app]
-  #           enabled: true
-  #           ip_subnet: 10.1.31.0/24
-  #     Tenant_A_DB_Zone:
-  #       vrf_vni: 13
-  #       svis:
-  #         140:
-  #           name: Tenant_A_DB_BZone_1
-  #           tags: [db, erp1]
-  #           enabled: true
-  #           ip_subnet: 10.1.40.0/24
-  #         141:
-  #           name: Tenant_A_DB_Zone_2
-  #           tags: [db]
-  #           enabled: true
-  #           ip_subnet: 10.1.41.0/24
-  #     Tenant_A_WAN_Zone:
-  #       vrf_vni: 14
-  #       svis:
-  #         150:
-  #           name: Tenant_A_WAN_Zone_1
-  #           tags: [wan]
-  #           enabled: true
-  #           ip_subnet: 10.1.40.0/24
+
     l2vlans:
       10:
         name: Tenant_A_client_l2_only
         tags: [vmotion]
       161:
-        vni_override: 550161
+        vni_override: 55161
         name: Tenant_A_NFS
         tags: [nfs]
 
-  # # Tenant B Specific Information - VRFs / VLANs
-  # Tenant_B:
-  #   mac_vrf_vni_base: 20000
-  #   vrfs:
-  #     Tenant_B_OP_Zone:
-  #       vrf_vni: 20
-  #       svis:
-  #         210:
-  #           name: Tenant_B_OP_Zone_1
-  #           tags: [opzone]
-  #           enabled: true
-  #           ip_subnet: 10.2.10.0/24
-  #         211:
-  #           name: Tenant_B_OP_Zone_2
-  #           tags: [opzone]
-  #           enabled: true
-  #           ip_subnet: 10.2.11.0/24
-  #     Tenant_B_WAN_Zone:
-  #       vrf_vni: 21
-  #       svis:
-  #         250:
-  #           name: Tenant_B_WAN_Zone_1
-  #           tags: [wan]
-  #           enabled: true
-  #           ip_subnet: 10.2.50.0/24
-
-  # # Tenant C Specific Information - VRFs / VLANs
-  # Tenant_C:
-  #   mac_vrf_vni_base: 30000
-  #   vrfs:
-  #     Tenant_C_OP_Zone:
-  #       vrf_vni: 30
-  #       svis:
-  #         310:
-  #           name: Tenant_C_OP_Zone_1
-  #           tags: [opzone]
-  #           enabled: true
-  #           ip_subnet: 10.3.10.0/24
-  #         311:
-  #           name: Tenant_C_OP_Zone_2
-  #           tags: [opzone]
-  #           enabled: true
-  #           ip_subnet: 10.3.11.0/24
-  #     Tenant_C_WAN_Zone:
-  #       vrf_vni: 31
-  #       svis:
-  #         350:
-  #           name: Tenant_C_WAN_Zone_1
-  #           tags: [wan]
-  #           enabled: true
-  #           ip_subnet: 10.3.50.0/24

@@ -178,8 +178,7 @@ vlan internal order ascending range 1006 1199
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
 | 10 | Tenant_A_client_l2_only | - |
-| 12 | Old_Gold_Ops_Zone_Test | - |
-| 110 | Old_Gold_Ops_Zone_1 | - |
+| 34 | Gold_data | - |
 
 ### VLANs Device Configuration
 
@@ -188,11 +187,8 @@ vlan internal order ascending range 1006 1199
 vlan 10
    name Tenant_A_client_l2_only
 !
-vlan 12
-   name Old_Gold_Ops_Zone_Test
-!
-vlan 110
-   name Old_Gold_Ops_Zone_1
+vlan 34
+   name Gold_data
 ```
 
 ## Interfaces
@@ -205,7 +201,7 @@ vlan 110
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet20 | host2_Eth2 | *trunk | *10,12,110,160 | *- | *- | 19 |
+| Ethernet20 | host02_Eth2 | *trunk | *10,34 | *- | *- | 19 |
 
 *Inherited from Port-Channel Interface
 
@@ -239,7 +235,7 @@ interface Ethernet2
    ip ospf area 0.0.0.0
 !
 interface Ethernet20
-   description host2_Eth2
+   description host02_Eth2
    no shutdown
    channel-group 19 mode active
 ```
@@ -252,7 +248,7 @@ interface Ethernet20
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel19 | host2 | switched | trunk | 10,12,110,160 | - | - | - | - | - | 0000:0000:0101:0102:0044 |
+| Port-Channel19 | host02_PortChannel to Host2 | switched | trunk | 10,34 | - | - | - | - | - | 0000:0000:0101:0102:0044 |
 
 ##### EVPN Multihoming
 
@@ -267,10 +263,10 @@ interface Ethernet20
 ```eos
 !
 interface Port-Channel19
-   description host2
+   description host02_PortChannel to Host2
    no shutdown
    switchport
-   switchport trunk allowed vlan 10,12,110,160
+   switchport trunk allowed vlan 10,34
    switchport mode trunk
    evpn ethernet-segment
       identifier 0000:0000:0101:0102:0044
@@ -289,7 +285,7 @@ interface Port-Channel19
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 10.254.0.4/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 10.254.1.4/32 |
-| Loopback100 | Old_Gold_Ops_VTEP_DIAGNOSTICS | Old_Gold_Ops | 10.255.1.4/32 |
+| Loopback100 | GOLD_VTEP_DIAGNOSTICS | GOLD | 10.255.1.4/32 |
 
 ##### IPv6
 
@@ -297,7 +293,7 @@ interface Port-Channel19
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
-| Loopback100 | Old_Gold_Ops_VTEP_DIAGNOSTICS | Old_Gold_Ops | - |
+| Loopback100 | GOLD_VTEP_DIAGNOSTICS | GOLD | - |
 
 
 #### Loopback Interfaces Device Configuration
@@ -317,9 +313,9 @@ interface Loopback1
    ip ospf area 0.0.0.0
 !
 interface Loopback100
-   description Old_Gold_Ops_VTEP_DIAGNOSTICS
+   description GOLD_VTEP_DIAGNOSTICS
    no shutdown
-   vrf Old_Gold_Ops
+   vrf GOLD
    ip address 10.255.1.4/32
 ```
 
@@ -329,29 +325,23 @@ interface Loopback100
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan12 | Old_Gold_Ops_Zone_Test | Old_Gold_Ops | - | False |
-| Vlan110 | Old_Gold_Ops_Zone_1 | Old_Gold_Ops | - | False |
+| Vlan34 | Gold_data | GOLD | - | False |
 
 ##### IPv4
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
-| Vlan12 |  Old_Gold_Ops  |  -  |  -  |  -  |  -  |  -  |  -  |
-| Vlan110 |  Old_Gold_Ops  |  -  |  -  |  -  |  -  |  -  |  -  |
+| Vlan34 |  GOLD  |  -  |  10.34.34.1/24  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
 
 ```eos
 !
-interface Vlan12
-   description Old_Gold_Ops_Zone_Test
+interface Vlan34
+   description Gold_data
    no shutdown
-   vrf Old_Gold_Ops
-!
-interface Vlan110
-   description Old_Gold_Ops_Zone_1
-   no shutdown
-   vrf Old_Gold_Ops
+   vrf GOLD
+   ip address virtual 10.34.34.1/24
 ```
 
 ### VXLAN Interface
@@ -367,15 +357,14 @@ interface Vlan110
 
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
-| 10 | 10010 | - | - |
-| 12 | 10012 | - | - |
-| 110 | 10110 | - | - |
+| 10 | 20010 | - | - |
+| 34 | 20034 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
-| Old_Gold_Ops | 10 | - |
+| GOLD | 10 | - |
 
 #### VXLAN Interface Device Configuration
 
@@ -385,10 +374,9 @@ interface Vxlan1
    description Leaf4_VTEP
    vxlan source-interface Loopback1
    vxlan udp-port 4789
-   vxlan vlan 10 vni 10010
-   vxlan vlan 12 vni 10012
-   vxlan vlan 110 vni 10110
-   vxlan vrf Old_Gold_Ops vni 10
+   vxlan vlan 10 vni 20010
+   vxlan vlan 34 vni 20034
+   vxlan vrf GOLD vni 10
 ```
 
 ## Routing
@@ -422,16 +410,16 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | True |
+| GOLD | True |
 | mgmt | False |
-| Old_Gold_Ops | True |
 
 #### IP Routing Device Configuration
 
 ```eos
 !
 ip routing
+ip routing vrf GOLD
 no ip routing vrf mgmt
-ip routing vrf Old_Gold_Ops
 ```
 
 ### IPv6 Routing
@@ -441,8 +429,8 @@ ip routing vrf Old_Gold_Ops
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | False |
+| GOLD | false |
 | mgmt | false |
-| Old_Gold_Ops | false |
 
 ### Static Routes
 
@@ -521,6 +509,7 @@ router ospf 100
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
 | 10.252.0.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 10.252.0.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 10.34.34.50 | 64999 | GOLD | - | - | - | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -534,14 +523,14 @@ router ospf 100
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| Old_Gold_Ops | 10.254.0.4:10 | 10:10 | - | - | learned | 12,110 |
-| Tenant_A_client_l2_only | 10.254.0.4:10010 | 10010:10010 | - | - | learned | 10 |
+| GOLD | 10.254.0.4:10 | 10:10 | - | - | learned | 34 |
+| Tenant_A_client_l2_only | 10.254.0.4:30010 | 30010:30010 | - | - | learned | 10 |
 
 #### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| Old_Gold_Ops | 10.254.0.4:10 | connected |
+| GOLD | 10.254.0.4:10 | connected |
 
 #### Router BGP Device Configuration
 
@@ -566,15 +555,15 @@ router bgp 65103
    neighbor 10.252.0.2 remote-as 65001
    neighbor 10.252.0.2 description Spine2
    !
-   vlan-aware-bundle Old_Gold_Ops
+   vlan-aware-bundle GOLD
       rd 10.254.0.4:10
       route-target both 10:10
       redistribute learned
-      vlan 12,110
+      vlan 34
    !
    vlan-aware-bundle Tenant_A_client_l2_only
-      rd 10.254.0.4:10010
-      route-target both 10010:10010
+      rd 10.254.0.4:30010
+      route-target both 30010:30010
       redistribute learned
       vlan 10
    !
@@ -584,12 +573,19 @@ router bgp 65103
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
    !
-   vrf Old_Gold_Ops
+   vrf GOLD
       rd 10.254.0.4:10
       route-target import evpn 10:10
       route-target export evpn 10:10
       router-id 10.254.0.4
+      update wait-install
+      neighbor 10.34.34.50 remote-as 64999
+      neighbor 10.34.34.50 description bgp peering to host2
+      neighbor 10.34.34.50 ebgp-multihop 3
       redistribute connected
+      !
+      address-family ipv4
+         neighbor 10.34.34.50 activate
 ```
 
 ## BFD
@@ -631,16 +627,16 @@ router bfd
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
+| GOLD | enabled |
 | mgmt | disabled |
-| Old_Gold_Ops | enabled |
 
 ### VRF Instances Device Configuration
 
 ```eos
 !
-vrf instance mgmt
+vrf instance GOLD
 !
-vrf instance Old_Gold_Ops
+vrf instance mgmt
 ```
 
 ## Virtual Source NAT
@@ -649,11 +645,11 @@ vrf instance Old_Gold_Ops
 
 | Source NAT VRF | Source NAT IP Address |
 | -------------- | --------------------- |
-| Old_Gold_Ops | 10.255.1.4 |
+| GOLD | 10.255.1.4 |
 
 ### Virtual Source NAT Configuration
 
 ```eos
 !
-ip address virtual source-nat vrf Old_Gold_Ops address 10.255.1.4
+ip address virtual source-nat vrf GOLD address 10.255.1.4
 ```

@@ -7,7 +7,7 @@ tenants:
   # Tenant A Specific Information - VRFs / VLANs
   Tenant_A:
     mac_vrf_vni_base: 20000
-    mac_vrf_id_base: 30000
+    # mac_vrf_id_base: 30000
     vrfs:
       GOLD:
         vrf_vni: 999
@@ -17,7 +17,7 @@ tenants:
         svis:
           12:
             name: Gold_data
-            tags: [gold_data_12]
+            tags: [gold_data]
             enabled: true
             # ip_address_virtual: 10.12.12.1/24 # Anycast IP address configuration with  "ip address virtual"
             # # Leaf Ip address so that Host1 can for BGP peering to both.
@@ -28,7 +28,7 @@ tenants:
               ip_address: 10.12.12.3/24
           34:
             name: Gold_data
-            tags: [gold_data_34]
+            tags: [gold_data]
             enabled: true
             # ip_address_virtual: 10.34.34.1/24
             nodes:
@@ -36,6 +36,12 @@ tenants:
               ip_address: 10.34.34.2/24
              Leaf4:
               ip_address: 10.34.34.3/24
+
+          55:
+            name: Gold_data
+            tags: [gold_data]
+            enabled: true
+            ip_address_virtual: 10.55.55.1/24
 
             # Define node specific configuration, such as unique IP addresses.
             # nodes:
@@ -77,7 +83,7 @@ tenants:
         #     default_originate:
         #       always: < true | false >
         #     update_source: < interface >
-            ebgp_multihop: 3
+            ebgp_multihop: 10
         #     # Nodes is required to restrict configuration of BGP neighbors to certain nodes in the network.
             nodes: [ Leaf3, Leaf4 ]
         #     # Next hop settings can be either ipv4 or ipv6 for one neighbor, this will be applied by a uniquely generated route-map per neighbor.

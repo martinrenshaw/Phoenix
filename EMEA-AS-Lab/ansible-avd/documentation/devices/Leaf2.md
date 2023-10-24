@@ -28,6 +28,7 @@
   - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
+  - [Virtual Router MAC Address](#virtual-router-mac-address)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
@@ -213,6 +214,8 @@ vlan internal order ascending range 1006 1199
 | ------- | ---- | ------------ |
 | 10 | Tenant_A_client_l2_only | - |
 | 12 | Gold_data | - |
+| 34 | Gold_data | - |
+| 55 | Gold_data | - |
 | 3998 | MLAG_iBGP_GOLD | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
@@ -225,6 +228,12 @@ vlan 10
    name Tenant_A_client_l2_only
 !
 vlan 12
+   name Gold_data
+!
+vlan 34
+   name Gold_data
+!
+vlan 55
    name Gold_data
 !
 vlan 3998
@@ -384,6 +393,8 @@ interface Loopback100
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan12 | Gold_data | GOLD | - | False |
+| Vlan34 | Gold_data | GOLD | - | False |
+| Vlan55 | Gold_data | GOLD | - | False |
 | Vlan3998 | MLAG_PEER_L3_iBGP: vrf GOLD | GOLD | 1500 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 1500 | False |
 | Vlan4094 | MLAG_PEER | default | 1500 | False |
@@ -393,6 +404,8 @@ interface Loopback100
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan12 |  GOLD  |  10.12.12.3/24  |  -  |  -  |  -  |  -  |  -  |
+| Vlan34 |  GOLD  |  -  |  -  |  -  |  -  |  -  |  -  |
+| Vlan55 |  GOLD  |  -  |  10.55.55.1/24  |  -  |  -  |  -  |  -  |
 | Vlan3998 |  GOLD  |  10.253.0.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.253.0.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.253.2.1/31  |  -  |  -  |  -  |  -  |  -  |
@@ -406,6 +419,17 @@ interface Vlan12
    no shutdown
    vrf GOLD
    ip address 10.12.12.3/24
+!
+interface Vlan34
+   description Gold_data
+   no shutdown
+   vrf GOLD
+!
+interface Vlan55
+   description Gold_data
+   no shutdown
+   vrf GOLD
+   ip address virtual 10.55.55.1/24
 !
 interface Vlan3998
    description MLAG_PEER_L3_iBGP: vrf GOLD
@@ -446,6 +470,8 @@ interface Vlan4094
 | ---- | --- | ---------- | --------------- |
 | 10 | 20010 | - | - |
 | 12 | 20012 | - | - |
+| 34 | 20034 | - | - |
+| 55 | 20055 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
 
@@ -464,6 +490,8 @@ interface Vxlan1
    vxlan udp-port 4789
    vxlan vlan 10 vni 20010
    vxlan vlan 12 vni 20012
+   vxlan vlan 34 vni 20034
+   vxlan vlan 55 vni 20055
    vxlan vrf GOLD vni 999
 ```
 
@@ -476,6 +504,19 @@ Multi agent routing protocol model enabled
 ```eos
 !
 service routing protocols model multi-agent
+```
+
+### Virtual Router MAC Address
+
+#### Virtual Router MAC Address Summary
+
+##### Virtual Router MAC Address: 00:1c:73:00:dc:01
+
+#### Virtual Router MAC Address Configuration
+
+```eos
+!
+ip virtual-router mac-address 00:1c:73:00:dc:01
 ```
 
 ### IP Routing
@@ -617,8 +658,8 @@ router ospf 100
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| GOLD | 10.254.0.2:999 | 999:999 | - | - | learned | 12 |
-| Tenant_A_client_l2_only | 10.254.0.2:30010 | 30010:30010 | - | - | learned | 10 |
+| GOLD | 10.254.0.2:999 | 999:999 | - | - | learned | 12,34,55 |
+| Tenant_A_client_l2_only | 10.254.0.2:20010 | 20010:20010 | - | - | learned | 10 |
 
 #### Router BGP VRFs
 
@@ -667,11 +708,11 @@ router bgp 65101
       rd 10.254.0.2:999
       route-target both 999:999
       redistribute learned
-      vlan 12
+      vlan 12,34,55
    !
    vlan-aware-bundle Tenant_A_client_l2_only
-      rd 10.254.0.2:30010
-      route-target both 30010:30010
+      rd 10.254.0.2:20010
+      route-target both 20010:20010
       redistribute learned
       vlan 10
    !

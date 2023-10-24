@@ -89,13 +89,13 @@ router_bgp:
       - 999:999
     redistribute_routes:
     - learned
-    vlan: '12'
+    vlan: 12,34,55
   - name: Tenant_A_client_l2_only
     tenant: Tenant_A
-    rd: 10.254.0.2:30010
+    rd: 10.254.0.2:20010
     route_targets:
       both:
-      - 30010:30010
+      - 20010:20010
     redistribute_routes:
     - learned
     vlan: '10'
@@ -170,6 +170,12 @@ vlans:
 - id: 12
   name: Gold_data
   tenant: Tenant_A
+- id: 34
+  name: Gold_data
+  tenant: Tenant_A
+- id: 55
+  name: Gold_data
+  tenant: Tenant_A
 - id: 3998
   name: MLAG_iBGP_GOLD
   trunk_groups:
@@ -195,10 +201,25 @@ vlan_interfaces:
 - name: Vlan12
   tenant: Tenant_A
   tags:
-  - gold_data_12
+  - gold_data
   description: Gold_data
   shutdown: false
   ip_address: 10.12.12.3/24
+  vrf: GOLD
+- name: Vlan34
+  tenant: Tenant_A
+  tags:
+  - gold_data
+  description: Gold_data
+  shutdown: false
+  vrf: GOLD
+- name: Vlan55
+  tenant: Tenant_A
+  tags:
+  - gold_data
+  description: Gold_data
+  shutdown: false
+  ip_address_virtual: 10.55.55.1/24
   vrf: GOLD
 - name: Vlan3998
   tenant: Tenant_A
@@ -323,6 +344,7 @@ router_bfd:
     multiplier: 3
 ip_igmp_snooping:
   globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
 route_maps:
 - name: RM-MLAG-PEER-IN
   sequence_numbers:
@@ -341,6 +363,10 @@ vxlan_interface:
       vlans:
       - id: 12
         vni: 20012
+      - id: 34
+        vni: 20034
+      - id: 55
+        vni: 20055
       - id: 10
         vni: 20010
       vrfs:

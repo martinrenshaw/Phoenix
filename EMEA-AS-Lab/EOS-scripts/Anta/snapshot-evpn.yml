@@ -10,4 +10,10 @@ text_format:
   - show bgp evpn route-type ip-prefix ipv4 detail # type-5
   - show bgp evpn route-type mac-ip detail # type-2
   - show bgp evpn route-type ethernet-segment detail # type-4
+  - show bgp evpn instance
+  - show bgp evpn detail
+  - show L2rib input all
+  - show L2rib input all floodset
+  - show L2rib output
+  - show L2rib output floodset
 

@@ -104,7 +104,7 @@ l3leaf:
       mlag_peer_l3_ipv4_pool: 10.253.0.0/24
       filter:
         tenants: [ Tenant_A ]
-        tags: [ gold_data_12, vmotion ]
+        tags: [ gold_data, vmotion ]
       bgp_as: 65101
       nodes:
         Leaf1:
@@ -118,7 +118,7 @@ l3leaf:
     DC1_LEAF3-4:
       filter:
         tenants: [ Tenant_A ]
-        tags: [ gold_data_34, vmotion ]
+        tags: [ gold_data, vmotion ]
       nodes:
         mlag: false
         Leaf3:

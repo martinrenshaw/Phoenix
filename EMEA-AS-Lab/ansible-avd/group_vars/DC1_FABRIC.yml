@@ -35,7 +35,7 @@ mlag_ips:
   mlag_peer: 10.253.1.0/24
 
 # Enable vlan aware bundles
-evpn_vlan_aware_bundles: true
+evpn_vlan_aware_bundles: True
 
 # bgp peer groups passwords
 bgp_peer_groups:
@@ -46,11 +46,20 @@ bgp_peer_groups:
   mlag_ipv4_underlay_peer:
     password: "vnEaG8gMeQf3d3cN6PktXQ=="
 
+
+
 # Spine Switches
 spine:
   defaults:
     loopback_ipv4_pool: 10.252.0.0/24
     bgp_as: 65001
+    bgp_defaults:
+  #  - update wait-for-convergence
+  #  - update wait-install
+      - no bgp default ipv4-unicast
+      - distance bgp 20 200 200
+      - graceful-restart restart-time 300
+      - graceful-restart
     platform: cEOS-LAB
   # defines the range of acceptable remote ASNs from leaf switches
   #leaf_as_range: 65101-65132
@@ -73,6 +82,13 @@ l3leaf:
     virtual_router_mac_address: 00:1c:73:00:dc:01
     platform: cEOS-LAB
     bgp_as: 65100
+    bgp_defaults:
+      - update wait-for-convergence
+      - update wait-install
+      - no bgp default ipv4-unicast
+      - distance bgp 20 200 200
+      - graceful-restart restart-time 300
+      - graceful-restart
     uplink_switches: [Spine1, Spine2]
     uplink_interfaces: [Ethernet1, Ethernet2] # leaf interfaces - lx-e1 - lx-e2 - positional var ties in with uplink_switch_interfaces
     mlag_interfaces: [Ethernet10, Ethernet11]

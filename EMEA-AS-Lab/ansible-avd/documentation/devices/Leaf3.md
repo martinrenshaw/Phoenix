@@ -25,7 +25,6 @@
   - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
-  - [Virtual Router MAC Address](#virtual-router-mac-address)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
@@ -77,14 +76,14 @@ interface Management0
 
 | Name Server | VRF | Priority |
 | ----------- | --- | -------- |
-| 192.168.2.1 | mgmt | - |
+| 172.17.0.1 | mgmt | - |
 | 8.8.8.8 | mgmt | - |
 
 #### IP Name Servers Device Configuration
 
 ```eos
 ip name-server vrf mgmt 8.8.8.8
-ip name-server vrf mgmt 192.168.2.1
+ip name-server vrf mgmt 172.17.0.1
 ```
 
 ### Management API HTTP
@@ -331,7 +330,7 @@ interface Loopback100
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
-| Vlan34 |  GOLD  |  -  |  10.34.34.1/24  |  -  |  -  |  -  |  -  |
+| Vlan34 |  GOLD  |  10.34.34.2/24  |  -  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
 
@@ -341,7 +340,7 @@ interface Vlan34
    description Gold_data
    no shutdown
    vrf GOLD
-   ip address virtual 10.34.34.1/24
+   ip address 10.34.34.2/24
 ```
 
 ### VXLAN Interface
@@ -364,7 +363,7 @@ interface Vlan34
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
-| GOLD | 10 | - |
+| GOLD | 999 | - |
 
 #### VXLAN Interface Device Configuration
 
@@ -376,7 +375,7 @@ interface Vxlan1
    vxlan udp-port 4789
    vxlan vlan 10 vni 20010
    vxlan vlan 34 vni 20034
-   vxlan vrf GOLD vni 10
+   vxlan vrf GOLD vni 999
 ```
 
 ## Routing
@@ -390,19 +389,6 @@ Multi agent routing protocol model enabled
 service routing protocols model multi-agent
 ```
 
-### Virtual Router MAC Address
-
-#### Virtual Router MAC Address Summary
-
-##### Virtual Router MAC Address: 00:1c:73:00:dc:01
-
-#### Virtual Router MAC Address Configuration
-
-```eos
-!
-ip virtual-router mac-address 00:1c:73:00:dc:01
-```
-
 ### IP Routing
 
 #### IP Routing Summary
@@ -411,7 +397,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 | --- | --------------- |
 | default | True |
 | GOLD | True |
-| mgmt | False |
+| mgmt | True |
 
 #### IP Routing Device Configuration
 
@@ -419,7 +405,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 !
 ip routing
 ip routing vrf GOLD
-no ip routing vrf mgmt
+ip routing vrf mgmt
 ```
 
 ### IPv6 Routing
@@ -486,6 +472,12 @@ router ospf 100
 
 | BGP Tuning |
 | ---------- |
+| update wait-for-convergence |
+| update wait-install |
+| no bgp default ipv4-unicast |
+| distance bgp 20 200 200 |
+| graceful-restart restart-time 300 |
+| graceful-restart |
 | update wait-install |
 | no bgp default ipv4-unicast |
 | maximum-paths 4 ecmp 4 |
@@ -523,14 +515,14 @@ router ospf 100
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| GOLD | 10.254.0.3:10 | 10:10 | - | - | learned | 34 |
+| GOLD | 10.254.0.3:999 | 999:999 | - | - | learned | 34 |
 | Tenant_A_client_l2_only | 10.254.0.3:30010 | 30010:30010 | - | - | learned | 10 |
 
 #### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| GOLD | 10.254.0.3:10 | connected |
+| GOLD | 10.254.0.3:999 | connected |
 
 #### Router BGP Device Configuration
 
@@ -541,6 +533,12 @@ router bgp 65102
    maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   update wait-for-convergence
+   update wait-install
+   no bgp default ipv4-unicast
+   distance bgp 20 200 200
+   graceful-restart restart-time 300
+   graceful-restart
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
@@ -556,8 +554,8 @@ router bgp 65102
    neighbor 10.252.0.2 description Spine2
    !
    vlan-aware-bundle GOLD
-      rd 10.254.0.3:10
-      route-target both 10:10
+      rd 10.254.0.3:999
+      route-target both 999:999
       redistribute learned
       vlan 34
    !
@@ -574,9 +572,9 @@ router bgp 65102
       no neighbor EVPN-OVERLAY-PEERS activate
    !
    vrf GOLD
-      rd 10.254.0.3:10
-      route-target import evpn 10:10
-      route-target export evpn 10:10
+      rd 10.254.0.3:999
+      route-target import evpn 999:999
+      route-target export evpn 999:999
       router-id 10.254.0.3
       update wait-install
       neighbor 10.34.34.50 remote-as 64999
@@ -628,7 +626,7 @@ router bfd
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | GOLD | enabled |
-| mgmt | disabled |
+| mgmt | enabled |
 
 ### VRF Instances Device Configuration
 

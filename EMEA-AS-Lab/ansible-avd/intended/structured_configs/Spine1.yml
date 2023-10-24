@@ -2,6 +2,11 @@ hostname: Spine1
 router_bgp:
   as: '65001'
   router_id: 10.252.0.1
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
   bgp:
     default:
       ipv4_unicast: false
@@ -57,7 +62,7 @@ vlan_internal_order:
     beginning: 1006
     ending: 1199
 ip_name_servers:
-- ip_address: 192.168.2.1
+- ip_address: 172.17.0.1
   vrf: mgmt
 - ip_address: 8.8.8.8
   vrf: mgmt
@@ -82,7 +87,7 @@ local_users:
   sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
 vrfs:
 - name: mgmt
-  ip_routing: false
+  ip_routing: true
 management_interfaces:
 - name: Management0
   description: oob_management

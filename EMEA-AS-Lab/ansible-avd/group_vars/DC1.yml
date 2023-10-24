@@ -30,7 +30,7 @@ local_users:
 
 
 # # Management interface configuration | Required
-# mgmt_vrf_routing: < boolean | default -> false >
+mgmt_vrf_routing: true
 # mgmt_interface: < mgmt_interface | default -> Management1 >
 mgmt_interface: Management0
 # mgmt_interface_vrf: < vrf_name | default -> MGMT >
@@ -40,10 +40,10 @@ mgmt_gateway: 172.17.0.1
 
 # dns servers.
 name_servers:
-  - 192.168.2.1
+  - 172.17.0.1
   - 8.8.8.8
 
 # NTP Servers IP or DNS name, first NTP server will be prefered, and sourced from Managment VRF
 ntp_servers:
- - 192.168.0.2
- - 192.168.0.3
+ - time.google.com
+ - time.facebook.com

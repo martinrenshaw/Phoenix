@@ -1,0 +1,17 @@
+! missing attribute vrfs.ipv4Neighbors.peers.types.peerStats.proxy
+VRF name: default
+-----------------
+DstAddr        MyDisc   YourDisc Interface/Transport      Type          LastUp 
+---------- ---------- ---------- -------------------- --------- ---------------
+10.254.0.1  821966764 3513230495                  NA  multihop  10/23/23 11:57 
+10.254.0.2 2974579554 3250047763                  NA  multihop  10/23/23 11:57 
+10.254.0.3 3590277229  607130589                  NA  multihop  10/24/23 06:40 
+10.254.0.4 1581736677 4005023765                  NA  multihop  10/23/23 11:57 
+
+         LastDown            LastDiag    State
+-------------------- ------------------- -----
+               NA       No Diagnostic       Up
+               NA       No Diagnostic       Up
+   10/24/23 06:39       No Diagnostic       Up
+               NA       No Diagnostic       Up
+

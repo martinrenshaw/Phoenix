@@ -65,14 +65,14 @@ interface Management0
 
 | Name Server | VRF | Priority |
 | ----------- | --- | -------- |
-| 192.168.2.1 | mgmt | - |
+| 172.17.0.1 | mgmt | - |
 | 8.8.8.8 | mgmt | - |
 
 #### IP Name Servers Device Configuration
 
 ```eos
 ip name-server vrf mgmt 8.8.8.8
-ip name-server vrf mgmt 192.168.2.1
+ip name-server vrf mgmt 172.17.0.1
 ```
 
 ### Management API HTTP
@@ -261,14 +261,14 @@ service routing protocols model multi-agent
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | True |
-| mgmt | False |
+| mgmt | True |
 
 #### IP Routing Device Configuration
 
 ```eos
 !
 ip routing
-no ip routing vrf mgmt
+ip routing vrf mgmt
 ```
 
 ### IPv6 Routing
@@ -337,6 +337,10 @@ router ospf 100
 
 | BGP Tuning |
 | ---------- |
+| no bgp default ipv4-unicast |
+| distance bgp 20 200 200 |
+| graceful-restart restart-time 300 |
+| graceful-restart |
 | update wait-install |
 | no bgp default ipv4-unicast |
 | maximum-paths 4 ecmp 4 |
@@ -381,6 +385,10 @@ router bgp 65001
    maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   no bgp default ipv4-unicast
+   distance bgp 20 200 200
+   graceful-restart restart-time 300
+   graceful-restart
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -433,7 +441,7 @@ router bfd
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
-| mgmt | disabled |
+| mgmt | enabled |
 
 ### VRF Instances Device Configuration
 

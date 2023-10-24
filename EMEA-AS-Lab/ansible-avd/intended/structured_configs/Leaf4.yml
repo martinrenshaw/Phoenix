@@ -2,6 +2,13 @@ hostname: Leaf4
 router_bgp:
   as: '65103'
   router_id: 10.254.0.4
+  bgp_defaults:
+  - update wait-for-convergence
+  - update wait-install
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
   bgp:
     default:
       ipv4_unicast: false
@@ -39,16 +46,16 @@ router_bgp:
   vrfs:
   - name: GOLD
     router_id: 10.254.0.4
-    rd: 10.254.0.4:10
+    rd: 10.254.0.4:999
     route_targets:
       import:
       - address_family: evpn
         route_targets:
-        - '10:10'
+        - 999:999
       export:
       - address_family: evpn
         route_targets:
-        - '10:10'
+        - 999:999
     redistribute_routes:
     - source_protocol: connected
     address_family_ipv4:
@@ -64,10 +71,10 @@ router_bgp:
       wait_install: true
   vlan_aware_bundles:
   - name: GOLD
-    rd: 10.254.0.4:10
+    rd: 10.254.0.4:999
     route_targets:
       both:
-      - '10:10'
+      - 999:999
     redistribute_routes:
     - learned
     vlan: '34'
@@ -92,7 +99,7 @@ vlan_internal_order:
     beginning: 1006
     ending: 1199
 ip_name_servers:
-- ip_address: 192.168.2.1
+- ip_address: 172.17.0.1
   vrf: mgmt
 - ip_address: 8.8.8.8
   vrf: mgmt
@@ -120,7 +127,7 @@ local_users:
   sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
 vrfs:
 - name: mgmt
-  ip_routing: false
+  ip_routing: true
 - name: GOLD
   tenant: Tenant_A
   ip_routing: true
@@ -210,7 +217,6 @@ vlans:
   tenant: Tenant_A
 ip_igmp_snooping:
   globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
 vlan_interfaces:
 - name: Vlan34
   tenant: Tenant_A
@@ -218,7 +224,7 @@ vlan_interfaces:
   - gold_data_34
   description: Gold_data
   shutdown: false
-  ip_address_virtual: 10.34.34.1/24
+  ip_address: 10.34.34.3/24
   vrf: GOLD
 vxlan_interface:
   Vxlan1:
@@ -233,7 +239,7 @@ vxlan_interface:
         vni: 20010
       vrfs:
       - name: GOLD
-        vni: 10
+        vni: 999
 virtual_source_nat_vrfs:
 - name: GOLD
   ip_address: 10.255.1.4

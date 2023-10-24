@@ -28,7 +28,6 @@
   - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
-  - [Virtual Router MAC Address](#virtual-router-mac-address)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
@@ -82,14 +81,14 @@ interface Management0
 
 | Name Server | VRF | Priority |
 | ----------- | --- | -------- |
-| 192.168.2.1 | mgmt | - |
+| 172.17.0.1 | mgmt | - |
 | 8.8.8.8 | mgmt | - |
 
 #### IP Name Servers Device Configuration
 
 ```eos
 ip name-server vrf mgmt 8.8.8.8
-ip name-server vrf mgmt 192.168.2.1
+ip name-server vrf mgmt 172.17.0.1
 ```
 
 ### Management API HTTP
@@ -214,7 +213,7 @@ vlan internal order ascending range 1006 1199
 | ------- | ---- | ------------ |
 | 10 | Tenant_A_client_l2_only | - |
 | 12 | Gold_data | - |
-| 3009 | MLAG_iBGP_GOLD | LEAF_PEER_L3 |
+| 3998 | MLAG_iBGP_GOLD | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
@@ -228,7 +227,7 @@ vlan 10
 vlan 12
    name Gold_data
 !
-vlan 3009
+vlan 3998
    name MLAG_iBGP_GOLD
    trunk group LEAF_PEER_L3
 !
@@ -385,7 +384,7 @@ interface Loopback100
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan12 | Gold_data | GOLD | - | False |
-| Vlan3009 | MLAG_PEER_L3_iBGP: vrf GOLD | GOLD | 1500 | False |
+| Vlan3998 | MLAG_PEER_L3_iBGP: vrf GOLD | GOLD | 1500 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 1500 | False |
 | Vlan4094 | MLAG_PEER | default | 1500 | False |
 
@@ -393,8 +392,8 @@ interface Loopback100
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
-| Vlan12 |  GOLD  |  -  |  10.12.12.1/24  |  -  |  -  |  -  |  -  |
-| Vlan3009 |  GOLD  |  10.253.0.0/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan12 |  GOLD  |  10.12.12.2/24  |  -  |  -  |  -  |  -  |  -  |
+| Vlan3998 |  GOLD  |  10.253.0.0/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.253.0.0/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.253.2.0/31  |  -  |  -  |  -  |  -  |  -  |
 
@@ -406,9 +405,9 @@ interface Vlan12
    description Gold_data
    no shutdown
    vrf GOLD
-   ip address virtual 10.12.12.1/24
+   ip address 10.12.12.2/24
 !
-interface Vlan3009
+interface Vlan3998
    description MLAG_PEER_L3_iBGP: vrf GOLD
    no shutdown
    mtu 1500
@@ -452,7 +451,7 @@ interface Vlan4094
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
-| GOLD | 10 | - |
+| GOLD | 999 | - |
 
 #### VXLAN Interface Device Configuration
 
@@ -465,7 +464,7 @@ interface Vxlan1
    vxlan udp-port 4789
    vxlan vlan 10 vni 20010
    vxlan vlan 12 vni 20012
-   vxlan vrf GOLD vni 10
+   vxlan vrf GOLD vni 999
 ```
 
 ## Routing
@@ -479,19 +478,6 @@ Multi agent routing protocol model enabled
 service routing protocols model multi-agent
 ```
 
-### Virtual Router MAC Address
-
-#### Virtual Router MAC Address Summary
-
-##### Virtual Router MAC Address: 00:1c:73:00:dc:01
-
-#### Virtual Router MAC Address Configuration
-
-```eos
-!
-ip virtual-router mac-address 00:1c:73:00:dc:01
-```
-
 ### IP Routing
 
 #### IP Routing Summary
@@ -500,7 +486,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 | --- | --------------- |
 | default | True |
 | GOLD | True |
-| mgmt | False |
+| mgmt | True |
 
 #### IP Routing Device Configuration
 
@@ -508,7 +494,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 !
 ip routing
 ip routing vrf GOLD
-no ip routing vrf mgmt
+ip routing vrf mgmt
 ```
 
 ### IPv6 Routing
@@ -577,6 +563,12 @@ router ospf 100
 
 | BGP Tuning |
 | ---------- |
+| update wait-for-convergence |
+| update wait-install |
+| no bgp default ipv4-unicast |
+| distance bgp 20 200 200 |
+| graceful-restart restart-time 300 |
+| graceful-restart |
 | update wait-install |
 | no bgp default ipv4-unicast |
 | maximum-paths 4 ecmp 4 |
@@ -625,14 +617,14 @@ router ospf 100
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| GOLD | 10.254.0.1:10 | 10:10 | - | - | learned | 12 |
+| GOLD | 10.254.0.1:999 | 999:999 | - | - | learned | 12 |
 | Tenant_A_client_l2_only | 10.254.0.1:30010 | 30010:30010 | - | - | learned | 10 |
 
 #### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| GOLD | 10.254.0.1:10 | connected |
+| GOLD | 10.254.0.1:999 | connected |
 
 #### Router BGP Device Configuration
 
@@ -643,6 +635,12 @@ router bgp 65101
    maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   update wait-for-convergence
+   update wait-install
+   no bgp default ipv4-unicast
+   distance bgp 20 200 200
+   graceful-restart restart-time 300
+   graceful-restart
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
@@ -666,8 +664,8 @@ router bgp 65101
    neighbor 10.252.0.2 description Spine2
    !
    vlan-aware-bundle GOLD
-      rd 10.254.0.1:10
-      route-target both 10:10
+      rd 10.254.0.1:999
+      route-target both 999:999
       redistribute learned
       vlan 12
    !
@@ -685,9 +683,9 @@ router bgp 65101
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    vrf GOLD
-      rd 10.254.0.1:10
-      route-target import evpn 10:10
-      route-target export evpn 10:10
+      rd 10.254.0.1:999
+      route-target import evpn 999:999
+      route-target export evpn 999:999
       router-id 10.254.0.1
       update wait-install
       neighbor 10.12.12.50 remote-as 64998
@@ -760,7 +758,7 @@ route-map RM-MLAG-PEER-IN permit 10
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | GOLD | enabled |
-| mgmt | disabled |
+| mgmt | enabled |
 
 ### VRF Instances Device Configuration
 

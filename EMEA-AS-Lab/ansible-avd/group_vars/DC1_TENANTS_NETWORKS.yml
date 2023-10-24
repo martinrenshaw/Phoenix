@@ -10,7 +10,7 @@ tenants:
     mac_vrf_id_base: 30000
     vrfs:
       GOLD:
-        vrf_vni: 10
+        vrf_vni: 999
         vtep_diagnostic:
           loopback: 100
           loopback_ip_range: 10.255.1.0/24
@@ -19,18 +19,23 @@ tenants:
             name: Gold_data
             tags: [gold_data_12]
             enabled: true
-            ip_address_virtual: 10.12.12.1/24 # Anycast IP address configuration with  "ip address virtual"
-            # Leaf Ip address so that Host1 can for BGP peering to both.
-            # nodes:
-            #  Leaf1:
-            #   ip_address: 10.12.12.2/24
-            #  Leaf2:
-            #   ip_address: 10.12.12.3/24
+            # ip_address_virtual: 10.12.12.1/24 # Anycast IP address configuration with  "ip address virtual"
+            # # Leaf Ip address so that Host1 can for BGP peering to both.
+            nodes:
+             Leaf1:
+              ip_address: 10.12.12.2/24
+             Leaf2:
+              ip_address: 10.12.12.3/24
           34:
             name: Gold_data
             tags: [gold_data_34]
             enabled: true
-            ip_address_virtual: 10.34.34.1/24
+            # ip_address_virtual: 10.34.34.1/24
+            nodes:
+             Leaf3:
+              ip_address: 10.34.34.2/24
+             Leaf4:
+              ip_address: 10.34.34.3/24
 
             # Define node specific configuration, such as unique IP addresses.
             # nodes:

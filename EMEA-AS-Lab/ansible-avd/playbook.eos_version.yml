@@ -1,5 +1,5 @@
 - name: Collect EOS version
-  hosts: DC
+  hosts: DC1
   gather_facts: false
   tasks:
     - name: Get switch EOS version

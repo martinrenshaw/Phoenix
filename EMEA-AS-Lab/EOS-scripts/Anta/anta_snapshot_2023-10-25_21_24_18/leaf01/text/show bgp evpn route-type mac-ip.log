@@ -1,0 +1,24 @@
+BGP routing table information for VRF default
+Router identifier 10.254.0.1, local AS number 65101
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.254.0.3:20034 mac-ip 0696.d982.5819
+                                 10.254.1.3            -       100     0       65001 65102 i
+ *  ec    RD: 10.254.0.3:20034 mac-ip 0696.d982.5819
+                                 10.254.1.3            -       100     0       65001 65102 i
+ * >Ec    RD: 10.254.0.4:20034 mac-ip 0696.d982.5819
+                                 10.254.1.4            -       100     0       65001 65103 i
+ *  ec    RD: 10.254.0.4:20034 mac-ip 0696.d982.5819
+                                 10.254.1.4            -       100     0       65001 65103 i
+ * >Ec    RD: 10.254.0.3:20034 mac-ip 0696.d982.5819 10.34.34.50
+                                 10.254.1.3            -       100     0       65001 65102 i
+ *  ec    RD: 10.254.0.3:20034 mac-ip 0696.d982.5819 10.34.34.50
+                                 10.254.1.3            -       100     0       65001 65102 i
+ * >Ec    RD: 10.254.0.4:20034 mac-ip 0696.d982.5819 10.34.34.50
+                                 10.254.1.4            -       100     0       65001 65103 i
+ *  ec    RD: 10.254.0.4:20034 mac-ip 0696.d982.5819 10.34.34.50
+                                 10.254.1.4            -       100     0       65001 65103 i

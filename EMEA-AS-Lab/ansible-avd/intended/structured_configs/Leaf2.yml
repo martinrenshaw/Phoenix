@@ -81,16 +81,16 @@ router_bgp:
         activate: true
     updates:
       wait_install: true
-  vlan_aware_bundles:
-  - name: GOLD
-    rd: 10.254.0.2:999
+  vlans:
+  - id: 12
+    tenant: Tenant_A
+    rd: 10.254.0.2:20012
     route_targets:
       both:
-      - 999:999
+      - 20012:20012
     redistribute_routes:
     - learned
-    vlan: 12,34,55
-  - name: Tenant_A_client_l2_only
+  - id: 10
     tenant: Tenant_A
     rd: 10.254.0.2:20010
     route_targets:
@@ -98,7 +98,6 @@ router_bgp:
       - 20010:20010
     redistribute_routes:
     - learned
-    vlan: '10'
 static_routes:
 - vrf: mgmt
   destination_address_prefix: 0.0.0.0/0
@@ -170,12 +169,6 @@ vlans:
 - id: 12
   name: Gold_data
   tenant: Tenant_A
-- id: 34
-  name: Gold_data
-  tenant: Tenant_A
-- id: 55
-  name: Gold_data
-  tenant: Tenant_A
 - id: 3998
   name: MLAG_iBGP_GOLD
   trunk_groups:
@@ -201,26 +194,12 @@ vlan_interfaces:
 - name: Vlan12
   tenant: Tenant_A
   tags:
-  - gold_data
+  - gold_12
   description: Gold_data
   shutdown: false
-  ip_address_virtual: 10.12.12.1/24
-  vrf: GOLD
-- name: Vlan34
-  tenant: Tenant_A
-  tags:
-  - gold_data
-  description: Gold_data
-  shutdown: false
-  ip_address_virtual: 10.34.34.1/24
-  vrf: GOLD
-- name: Vlan55
-  tenant: Tenant_A
-  tags:
-  - gold_data
-  description: Gold_data
-  shutdown: false
-  ip_address_virtual: 10.55.55.1/24
+  ip_address: 10.12.12.3/24
+  ip_virtual_router_addresses:
+  - 10.12.12.1
   vrf: GOLD
 - name: Vlan3998
   tenant: Tenant_A
@@ -322,11 +301,6 @@ loopback_interfaces:
   shutdown: false
   ip_address: 10.254.1.1/32
   ospf_area: 0.0.0.0
-- name: Loopback100
-  description: GOLD_VTEP_DIAGNOSTICS
-  shutdown: false
-  vrf: GOLD
-  ip_address: 10.255.1.2/32
 router_ospf:
   process_ids:
   - id: 100
@@ -364,15 +338,8 @@ vxlan_interface:
       vlans:
       - id: 12
         vni: 20012
-      - id: 34
-        vni: 20034
-      - id: 55
-        vni: 20055
       - id: 10
         vni: 20010
       vrfs:
       - name: GOLD
         vni: 999
-virtual_source_nat_vrfs:
-- name: GOLD
-  ip_address: 10.255.1.2

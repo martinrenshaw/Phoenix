@@ -38,9 +38,6 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
-- [Virtual Source NAT](#virtual-source-nat)
-  - [Virtual Source NAT Summary](#virtual-source-nat-summary)
-  - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
 
 ## Management
 
@@ -178,9 +175,7 @@ vlan internal order ascending range 1006 1199
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
 | 10 | Tenant_A_client_l2_only | - |
-| 12 | Gold_data | - |
 | 34 | Gold_data | - |
-| 55 | Gold_data | - |
 
 ### VLANs Device Configuration
 
@@ -189,13 +184,7 @@ vlan internal order ascending range 1006 1199
 vlan 10
    name Tenant_A_client_l2_only
 !
-vlan 12
-   name Gold_data
-!
 vlan 34
-   name Gold_data
-!
-vlan 55
    name Gold_data
 ```
 
@@ -210,7 +199,7 @@ vlan 55
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet10 |  PC-1_Eth1 | access | 34 | - | - | - |
-| Ethernet20 | host02_Eth2 | *trunk | *10,34 | *- | *- | 19 |
+| Ethernet20 | host02_Eth2 | *trunk | *10,34,55 | *- | *- | 19 |
 
 *Inherited from Port-Channel Interface
 
@@ -264,7 +253,7 @@ interface Ethernet20
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel19 | host02_PortChannel to Host2 | switched | trunk | 10,34 | - | - | - | - | - | 0000:0000:0101:0102:0044 |
+| Port-Channel19 | host02_PortChannel to Host2 | switched | trunk | 10,34,55 | - | - | - | - | - | 0000:0000:0101:0102:0044 |
 
 ##### EVPN Multihoming
 
@@ -282,7 +271,7 @@ interface Port-Channel19
    description host02_PortChannel to Host2
    no shutdown
    switchport
-   switchport trunk allowed vlan 10,34
+   switchport trunk allowed vlan 10,34,55
    switchport mode trunk
    evpn ethernet-segment
       identifier 0000:0000:0101:0102:0044
@@ -301,7 +290,6 @@ interface Port-Channel19
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 10.254.0.4/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 10.254.1.4/32 |
-| Loopback100 | GOLD_VTEP_DIAGNOSTICS | GOLD | 10.255.1.4/32 |
 
 ##### IPv6
 
@@ -309,7 +297,6 @@ interface Port-Channel19
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
-| Loopback100 | GOLD_VTEP_DIAGNOSTICS | GOLD | - |
 
 
 #### Loopback Interfaces Device Configuration
@@ -327,12 +314,6 @@ interface Loopback1
    no shutdown
    ip address 10.254.1.4/32
    ip ospf area 0.0.0.0
-!
-interface Loopback100
-   description GOLD_VTEP_DIAGNOSTICS
-   no shutdown
-   vrf GOLD
-   ip address 10.255.1.4/32
 ```
 
 ### VLAN Interfaces
@@ -341,39 +322,24 @@ interface Loopback100
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan12 | Gold_data | GOLD | - | False |
 | Vlan34 | Gold_data | GOLD | - | False |
-| Vlan55 | Gold_data | GOLD | - | False |
 
 ##### IPv4
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
-| Vlan12 |  GOLD  |  -  |  10.12.12.1/24  |  -  |  -  |  -  |  -  |
-| Vlan34 |  GOLD  |  -  |  10.34.34.1/24  |  -  |  -  |  -  |  -  |
-| Vlan55 |  GOLD  |  -  |  10.55.55.1/24  |  -  |  -  |  -  |  -  |
+| Vlan34 |  GOLD  |  10.34.34.3/24  |  -  |  10.34.34.1  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
 
 ```eos
 !
-interface Vlan12
-   description Gold_data
-   no shutdown
-   vrf GOLD
-   ip address virtual 10.12.12.1/24
-!
 interface Vlan34
    description Gold_data
    no shutdown
    vrf GOLD
-   ip address virtual 10.34.34.1/24
-!
-interface Vlan55
-   description Gold_data
-   no shutdown
-   vrf GOLD
-   ip address virtual 10.55.55.1/24
+   ip address 10.34.34.3/24
+   ip virtual-router address 10.34.34.1
 ```
 
 ### VXLAN Interface
@@ -390,9 +356,7 @@ interface Vlan55
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
 | 10 | 20010 | - | - |
-| 12 | 20012 | - | - |
 | 34 | 20034 | - | - |
-| 55 | 20055 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
 
@@ -409,9 +373,7 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan udp-port 4789
    vxlan vlan 10 vni 20010
-   vxlan vlan 12 vni 20012
    vxlan vlan 34 vni 20034
-   vxlan vlan 55 vni 20055
    vxlan vrf GOLD vni 999
 ```
 
@@ -551,7 +513,7 @@ router ospf 100
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
 | 10.252.0.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 10.252.0.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
-| 10.34.34.50 | 64999 | GOLD | - | - | - | - | - | - | - | - |
+| 10.34.34.50 | 64999 | GOLD | - | extended | - | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -561,12 +523,12 @@ router ospf 100
 | ---------- | -------- | ------------- |
 | EVPN-OVERLAY-PEERS | True | default |
 
-#### Router BGP VLAN Aware Bundles
+#### Router BGP VLANs
 
-| VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
-| ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| GOLD | 10.254.0.4:999 | 999:999 | - | - | learned | 12,34,55 |
-| Tenant_A_client_l2_only | 10.254.0.4:20010 | 20010:20010 | - | - | learned | 10 |
+| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
+| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
+| 10 | 10.254.0.4:20010 | 20010:20010 | - | - | learned |
+| 34 | 10.254.0.4:20034 | 20034:20034 | - | - | learned |
 
 #### Router BGP VRFs
 
@@ -603,17 +565,15 @@ router bgp 65103
    neighbor 10.252.0.2 remote-as 65001
    neighbor 10.252.0.2 description Spine2
    !
-   vlan-aware-bundle GOLD
-      rd 10.254.0.4:999
-      route-target both 999:999
-      redistribute learned
-      vlan 12,34,55
-   !
-   vlan-aware-bundle Tenant_A_client_l2_only
+   vlan 10
       rd 10.254.0.4:20010
       route-target both 20010:20010
       redistribute learned
-      vlan 10
+   !
+   vlan 34
+      rd 10.254.0.4:20034
+      route-target both 20034:20034
+      redistribute learned
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
@@ -630,6 +590,7 @@ router bgp 65103
       neighbor 10.34.34.50 remote-as 64999
       neighbor 10.34.34.50 description bgp peering to host2
       neighbor 10.34.34.50 ebgp-multihop 10
+      neighbor 10.34.34.50 send-community extended
       redistribute connected
       !
       address-family ipv4
@@ -685,19 +646,4 @@ router bfd
 vrf instance GOLD
 !
 vrf instance mgmt
-```
-
-## Virtual Source NAT
-
-### Virtual Source NAT Summary
-
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| GOLD | 10.255.1.4 |
-
-### Virtual Source NAT Configuration
-
-```eos
-!
-ip address virtual source-nat vrf GOLD address 10.255.1.4
 ```

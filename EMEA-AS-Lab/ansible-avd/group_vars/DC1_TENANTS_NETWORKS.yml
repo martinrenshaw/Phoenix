@@ -11,35 +11,37 @@ tenants:
     vrfs:
       GOLD:
         vrf_vni: 999
-        vtep_diagnostic:
-          loopback: 100
-          loopback_ip_range: 10.255.1.0/24
+        # vtep_diagnostic:
+        #   loopback: 100
+        #   loopback_ip_range: 10.255.1.0/24
         svis:
           12:
             name: Gold_data
-            tags: [gold_data]
+            tags: [gold_12]
             enabled: true
-            ip_address_virtual: 10.12.12.1/24 # Anycast IP address configuration with  "ip address virtual"
+            # ip_address_virtual: 10.12.12.1/24 # Anycast IP address configuration with  "ip address virtual"
+            ip_virtual_router_addresses: ["10.12.12.1"]
             # # Leaf Ip address so that Host1 can for BGP peering to both.
-            # nodes:
-            #  Leaf1:
-            #   ip_address: 10.12.12.2/24
-            #  Leaf2:
-            #   ip_address: 10.12.12.3/24
+            nodes:
+             Leaf1:
+              ip_address: 10.12.12.2/24
+             Leaf2:
+              ip_address: 10.12.12.3/24
           34:
             name: Gold_data
-            tags: [gold_data]
+            tags: [gold_34]
             enabled: true
-            ip_address_virtual: 10.34.34.1/24
-            # nodes:
-            #  Leaf3:
-            #   ip_address: 10.34.34.2/24
-            #  Leaf4:
-            #   ip_address: 10.34.34.3/24
+            # ip_address_virtual: 10.34.34.1/24
+            ip_virtual_router_addresses: ["10.34.34.1"]
+            nodes:
+             Leaf3:
+              ip_address: 10.34.34.2/24
+             Leaf4:
+              ip_address: 10.34.34.3/24
 
           55:
             name: Gold_data
-            tags: [gold_data]
+            tags: [gold_55]
             enabled: true
             ip_address_virtual: 10.55.55.1/24
 
@@ -76,7 +78,8 @@ tenants:
             remote_as: 64999
             description: bgp peering to host2
         #     password: < encrypted password >
-        #     send_community: < standard | extended | large | all >
+            # send_community: < standard | extended | large | all >
+            send_community: extended
         #     next_hop_self: < true | false >
         #     timers: < keepalive_hold_timer_values >
         #     maximum_routes: < 0-4294967294 >

@@ -1,0 +1,42 @@
+325a.64fd.d3d5, VLAN 1007, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet2
+7276.ce6d.f3df, VLAN 1006, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet1
+1a83.efe2.7d18, VLAN 12, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 55, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+1a83.efe2.7d18, VLAN 3998, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+1a83.efe2.7d18, VLAN 4094, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+1a83.efe2.7d18, VLAN 1198, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 4093, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 1, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+0a73.c4a0.86f3, VLAN 12, seq 1, pref 16, peerDynamicMac, source: MLAG
+   Port-Channel19
+1a83.efe2.7d18, VLAN 34, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+1a83.efe2.7d18, VLAN 4093, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 1198, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 3998, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 4094, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 34, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 10, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+001c.7300.dc01, VLAN 12, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+1a83.efe2.7d18, VLAN 55, seq 1, pref 64, peerStaticMac, source: MLAG
+   Port-Channel10
+0625.01a0.7eb4, VLAN 34, seq 2, pref 16, evpnDynamicRemoteMac, source: BGP
+   Load Balance entry: 2-way
+      VTEP 10.254.1.3
+      VTEP 10.254.1.4

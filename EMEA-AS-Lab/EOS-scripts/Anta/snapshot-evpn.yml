@@ -16,4 +16,5 @@ text_format:
   - show L2rib input all floodset
   - show L2rib output
   - show L2rib output floodset
+  - show running-config
 

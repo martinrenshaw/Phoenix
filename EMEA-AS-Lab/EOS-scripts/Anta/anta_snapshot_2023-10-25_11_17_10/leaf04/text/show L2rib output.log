@@ -1,0 +1,8 @@
+0625.01a0.7eb4, VLAN 34, seq 4, pref 16, evpnIntfDynamicMac, source: BGP
+   Port-Channel19
+825a.52fc.af7f, VLAN 1006, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet1
+0a73.c4a0.86f3, VLAN 12, seq 1, pref 16, evpnDynamicRemoteMac, source: BGP
+   VTEP 10.254.1.1
+56ad.baef.4296, VLAN 1007, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet2

@@ -1,0 +1,6 @@
+VLAN  Name                             Status    Ports
+----- -------------------------------- --------- -------------------------------
+1     default                          active    Et5, Et6, Et7, Et8, Et9, Et10
+                                                 Et11, Et12, Et13, Et14, Et15
+                                                 Et16, Et17, Et18, Et19, Et20
+

@@ -11,6 +11,12 @@ port_profiles:
   Old_Gold_B:
     mode: trunk
     vlans: "210-211"
+  PC1:
+    mode: access
+    vlans: "34"
+  PC2:
+    mode: access
+    vlans: "12"
 
 servers:
   host01:
@@ -37,3 +43,19 @@ servers:
         ethernet_segment:
           short_esi: 0101:0102:0044
           redundancy: all-active
+  # Adding these test single homed hosts so they dont get removed each time avd is deployed.        
+  PC-1:
+    rack: rack01
+    adapters:
+      - endpoint_ports: [Eth1]
+        switch_ports: [Ethernet10]
+        switches: [Leaf4]
+        profile: PC1
+
+  PC-2:
+    rack: rack01
+    adapters:
+      - endpoint_ports: [Eth1]
+        switch_ports: [Ethernet15]
+        switches: [Leaf1]
+        profile: PC2

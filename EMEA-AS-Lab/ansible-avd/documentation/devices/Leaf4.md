@@ -209,6 +209,7 @@ vlan 55
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+| Ethernet10 |  PC-1_Eth1 | access | 34 | - | - | - |
 | Ethernet20 | host02_Eth2 | *trunk | *10,34 | *- | *- | 19 |
 
 *Inherited from Port-Channel Interface
@@ -241,6 +242,13 @@ interface Ethernet2
    ip address 10.255.0.15/31
    ip ospf network point-to-point
    ip ospf area 0.0.0.0
+!
+interface Ethernet10
+   description PC-1_Eth1
+   no shutdown
+   switchport access vlan 34
+   switchport mode access
+   switchport
 !
 interface Ethernet20
    description host02_Eth2
@@ -342,7 +350,7 @@ interface Loopback100
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan12 |  GOLD  |  -  |  10.12.12.1/24  |  -  |  -  |  -  |  -  |
-| Vlan34 |  GOLD  |  10.34.34.3/24  |  -  |  -  |  -  |  -  |  -  |
+| Vlan34 |  GOLD  |  -  |  10.34.34.1/24  |  -  |  -  |  -  |  -  |
 | Vlan55 |  GOLD  |  -  |  10.55.55.1/24  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
@@ -359,7 +367,7 @@ interface Vlan34
    description Gold_data
    no shutdown
    vrf GOLD
-   ip address 10.34.34.3/24
+   ip address virtual 10.34.34.1/24
 !
 interface Vlan55
    description Gold_data

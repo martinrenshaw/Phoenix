@@ -342,7 +342,7 @@ interface Loopback100
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan12 |  GOLD  |  -  |  10.12.12.1/24  |  -  |  -  |  -  |  -  |
-| Vlan34 |  GOLD  |  10.34.34.2/24  |  -  |  -  |  -  |  -  |  -  |
+| Vlan34 |  GOLD  |  -  |  10.34.34.1/24  |  -  |  -  |  -  |  -  |
 | Vlan55 |  GOLD  |  -  |  10.55.55.1/24  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
@@ -359,7 +359,7 @@ interface Vlan34
    description Gold_data
    no shutdown
    vrf GOLD
-   ip address 10.34.34.2/24
+   ip address virtual 10.34.34.1/24
 !
 interface Vlan55
    description Gold_data

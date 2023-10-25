@@ -212,6 +212,7 @@ vlan_interfaces:
   - gold_data
   description: Gold_data
   shutdown: false
+  ip_address_virtual: 10.34.34.1/24
   vrf: GOLD
 - name: Vlan55
   tenant: Tenant_A
@@ -299,6 +300,16 @@ ethernet_interfaces:
   channel_group:
     id: 19
     mode: active
+- name: Ethernet15
+  peer: PC-2
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: PC2
+  description: PC-2_Eth1
+  shutdown: false
+  type: switched
+  mode: access
+  vlans: '12'
 mlag_configuration:
   domain_id: DC1_LEAF1-2
   local_interface: Vlan4094

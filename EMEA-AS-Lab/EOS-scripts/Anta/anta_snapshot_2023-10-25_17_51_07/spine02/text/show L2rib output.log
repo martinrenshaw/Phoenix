@@ -1,0 +1,8 @@
+d62b.ef4c.d216, VLAN 1007, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet1
+8645.5197.1158, VLAN 1009, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet2
+e20c.a92b.e31a, VLAN 1006, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet3
+ba8f.dbeb.5578, VLAN 1008, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet4

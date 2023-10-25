@@ -30,12 +30,12 @@ tenants:
             name: Gold_data
             tags: [gold_data]
             enabled: true
-            # ip_address_virtual: 10.34.34.1/24
-            nodes:
-             Leaf3:
-              ip_address: 10.34.34.2/24
-             Leaf4:
-              ip_address: 10.34.34.3/24
+            ip_address_virtual: 10.34.34.1/24
+            # nodes:
+            #  Leaf3:
+            #   ip_address: 10.34.34.2/24
+            #  Leaf4:
+            #   ip_address: 10.34.34.3/24
 
           55:
             name: Gold_data

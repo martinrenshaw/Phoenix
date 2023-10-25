@@ -3,6 +3,7 @@ l3leaf,Leaf1,Ethernet1,spine,Spine1,Ethernet1,True
 l3leaf,Leaf1,Ethernet2,spine,Spine2,Ethernet1,True
 l3leaf,Leaf1,Ethernet10,mlag_peer,Leaf2,Ethernet10,True
 l3leaf,Leaf1,Ethernet11,mlag_peer,Leaf2,Ethernet11,True
+l3leaf,Leaf1,Ethernet15,server,PC-2,Eth1,True
 l3leaf,Leaf1,Ethernet19,server,host01,Eth1,True
 l3leaf,Leaf2,Ethernet1,spine,Spine1,Ethernet2,True
 l3leaf,Leaf2,Ethernet2,spine,Spine2,Ethernet2,True
@@ -14,6 +15,7 @@ l3leaf,Leaf3,Ethernet2,spine,Spine2,Ethernet3,True
 l3leaf,Leaf3,Ethernet19,server,host02,Eth1,True
 l3leaf,Leaf4,Ethernet1,spine,Spine1,Ethernet4,True
 l3leaf,Leaf4,Ethernet2,spine,Spine2,Ethernet4,True
+l3leaf,Leaf4,Ethernet10,server,PC-1,Eth1,True
 l3leaf,Leaf4,Ethernet20,server,host02,Eth2,True
 spine,Spine1,Ethernet1,l3leaf,Leaf1,Ethernet1,True
 spine,Spine1,Ethernet2,l3leaf,Leaf2,Ethernet1,True

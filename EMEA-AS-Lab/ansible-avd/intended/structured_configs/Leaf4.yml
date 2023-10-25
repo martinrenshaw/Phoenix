@@ -177,6 +177,16 @@ ethernet_interfaces:
   channel_group:
     id: 19
     mode: active
+- name: Ethernet10
+  peer: PC-1
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: PC1
+  description: PC-1_Eth1
+  shutdown: false
+  type: switched
+  mode: access
+  vlans: '34'
 loopback_interfaces:
 - name: Loopback0
   description: EVPN_Overlay_Peering
@@ -239,7 +249,7 @@ vlan_interfaces:
   - gold_data
   description: Gold_data
   shutdown: false
-  ip_address: 10.34.34.3/24
+  ip_address_virtual: 10.34.34.1/24
   vrf: GOLD
 - name: Vlan55
   tenant: Tenant_A

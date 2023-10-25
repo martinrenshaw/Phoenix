@@ -8,13 +8,18 @@ text_format:
   - show ip route vrf all
   - show bgp evpn route-type auto-discovery detail # type-1
   - show bgp evpn route-type ip-prefix ipv4 detail # type-5
-  - show bgp evpn route-type mac-ip detail # type-2
+  - show bgp evpn route-type mac-ip detail # type-2 detailed
+  - show bgp evpn route-type mac-ip # type-2
   - show bgp evpn route-type ethernet-segment detail # type-4
+  - show bgp evpn route-type imet detail # type-3  
   - show bgp evpn instance
   - show bgp evpn detail
   - show L2rib input all
   - show L2rib input all floodset
   - show L2rib output
   - show L2rib output floodset
-  - show running-config
-
+  # - show running-config # not licked by eAPI??
+  - show vxlan address-table
+  - show vxlan vtep
+  - show bgp evpn sanity detail
+  - show mac address-table

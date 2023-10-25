@@ -1,0 +1,21 @@
+BGP routing table information for VRF default
+Router identifier 10.254.0.3, local AS number 65102
+BGP routing table entry for ip-prefix 10.255.1.2/32, Route Distinguisher: 10.254.0.2:999
+ Paths: 2 available
+  65001 65101
+    10.254.1.1 from 10.252.0.1 (10.252.0.1)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP head, ECMP, best, ECMP contributor
+      Extended Community: Route-Target-AS:999:999 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:02:00:57:cf:9a:ad
+      VNI: 999
+  65001 65101
+    10.254.1.1 from 10.252.0.2 (10.252.0.2)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP, ECMP contributor
+      Extended Community: Route-Target-AS:999:999 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:02:00:57:cf:9a:ad
+      VNI: 999
+BGP routing table entry for ip-prefix 10.255.1.3/32, Route Distinguisher: 10.254.0.3:999
+ Paths: 1 available
+  Local
+    - from - (0.0.0.0)
+      Origin IGP, metric -, localpref -, weight 0, tag 0, valid, local, best, redistributed (Connected)
+      Extended Community: Route-Target-AS:999:999 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:02:3d:55:48:34:9a
+      VNI: 999

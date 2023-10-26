@@ -75,6 +75,8 @@ tenants:
             description: bgp peering to host1
             nodes: [ Leaf1, Leaf2 ]
           10.34.34.50:
+            bgp:
+              raw_eos_cli: no update wait-install
             remote_as: 64999
             description: bgp peering to host2
         #     password: < encrypted password >

@@ -83,8 +83,8 @@ l3leaf:
     platform: cEOS-LAB
     bgp_as: 65100
     bgp_defaults:
-      - update wait-for-convergence
-      - update wait-install
+      # - update wait-for-convergence
+      - no update wait-install # having this enabled stopped the evpn type-5 update propergating
       - no bgp default ipv4-unicast
       - distance bgp 20 200 200
       - graceful-restart restart-time 300
@@ -177,7 +177,7 @@ spine_bgp_defaults:
   - graceful-restart
 
 leaf_bgp_defaults:
-  #  - update wait-install
+  - no update wait-install
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
   - graceful-restart restart-time 300

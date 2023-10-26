@@ -567,8 +567,7 @@ router ospf 100
 
 | BGP Tuning |
 | ---------- |
-| update wait-for-convergence |
-| update wait-install |
+| no update wait-install |
 | no bgp default ipv4-unicast |
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
@@ -639,8 +638,7 @@ router bgp 65101
    maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
-   update wait-for-convergence
-   update wait-install
+   no update wait-install
    no bgp default ipv4-unicast
    distance bgp 20 200 200
    graceful-restart restart-time 300

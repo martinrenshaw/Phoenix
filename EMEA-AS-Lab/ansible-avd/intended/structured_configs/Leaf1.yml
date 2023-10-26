@@ -3,8 +3,7 @@ router_bgp:
   as: '65101'
   router_id: 10.254.0.1
   bgp_defaults:
-  - update wait-for-convergence
-  - update wait-install
+  - no update wait-install
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
   - graceful-restart restart-time 300

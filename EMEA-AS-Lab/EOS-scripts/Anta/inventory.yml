@@ -18,9 +18,9 @@ anta_inventory:
   - host: 172.17.100.6
     name: leaf04
     tags: ['fabric', 'leaf']
-  - host: 172.17.100.9
+  - host: 172.17.100.8
     name: host1
     tags: ['server']
-  - host: 172.17.100.10
+  - host: 172.17.100.9
     name: host2
     tags: ['server']

@@ -1,0 +1,8 @@
+001c.7300.dc01, VLAN 34, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Port-Channel10
+06a8.b418.5136, VLAN 34, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Port-Channel10
+06ab.3115.27a3, VLAN 10, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Port-Channel10
+02d5.faf9.2e2d, VLAN 34, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Port-Channel10

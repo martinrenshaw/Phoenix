@@ -1,0 +1,57 @@
+---
+anta.tests.configuration:
+  - VerifyZeroTouch: # Verifies ZeroTouch is disabled.
+  # - VerifyRunningConfigDiffs:
+
+anta.tests.software:
+  - VerifyEOSVersion:
+      versions:
+        - '4.30.3M-33434233.4303M (engineering build)'
+
+
+anta.tests.routing:
+  bgp:
+    - VerifyBGPPeerCount:
+          address_families:
+            - afi: "evpn"
+              num_peers: 4
+    - VerifyBGPPeersHealth:
+          address_families:
+            - afi: "evpn"
+    # - VerifyBGPSpecificPeers:
+    # - VerifyBGPEVPNState:
+  ospf:
+    - VerifyOSPFNeighborState:
+
+  generic:
+    - VerifyRoutingProtocolModel:
+        model: multi-agent
+    - VerifyRoutingTableSize:
+        minimum: 8 # 5 connected routes, should see 3 for the vTEP loopbacks
+        maximum: 40
+    - VerifyBFD:
+    - VerifyRoutingTableEntry:
+        vrf: default
+        routes:
+          - 10.254.1.1 # 10.254.1.x VTEP tun source - L1 & L2
+          # - 10.254.1.2 # L1 & L2 mlag so share and address
+          - 10.254.1.3 # L3
+          - 10.254.1.4 # L4
+          - 10.254.1.4 # L4
+          - 10.254.0.1 # 10.254.0.x EVPN_Overlay_Peering - L1
+          - 10.254.0.2 # L2
+          - 10.254.0.3 # L3
+          - 10.254.0.4 # L4
+          - 10.252.0.1 # S1 EVPN_Overlay_Peering
+          - 10.252.0.2 # S2 EVPN_Overlay_Peering
+
+anta.tests.interfaces:
+  # - VerifyInterfaceUtilization:
+  - VerifyLoopbackCount:
+      number: 1
+
+anta.tests.system:
+  - VerifyReloadCause:
+  - VerifyNTP:
+
+

@@ -1,0 +1,32 @@
+Interface                      Status         Protocol           Description
+Et1                            up             up                 P2P_LINK_TO_SPINE1_Ethernet1
+Et2                            up             up                 P2P_LINK_TO_SPINE2_Ethernet1
+Et3                            up             up                 
+Et4                            up             up                 
+Et5                            up             up                 
+Et6                            up             up                 
+Et7                            up             up                 
+Et8                            up             up                 
+Et9                            up             up                 
+Et10                           up             up                 MLAG_PEER_Leaf2_Ethernet10
+Et11                           up             up                 MLAG_PEER_Leaf2_Ethernet11
+Et12                           up             up                 
+Et13                           up             up                 
+Et14                           up             up                 
+Et15                           up             up                 PC-2_Eth1
+Et16                           up             up                 
+Et17                           up             up                 
+Et18                           up             up                 
+Et19                           up             up                 host01_Eth1
+Et20                           up             up                 
+Lo0                            up             up                 EVPN_Overlay_Peering
+Lo1                            up             up                 VTEP_VXLAN_Tunnel_Source
+Ma0                            up             up                 oob_management
+Po10                           up             up                 MLAG_PEER_Leaf2_Po10
+Po19                           up             up                 host01_PortChannel to Host1
+Vl12                           up             up                 Gold_data
+Vl1199                         up             up                 
+Vl3998                         up             up                 MLAG_PEER_L3_iBGP: vrf GOLD
+Vl4093                         up             up                 MLAG_PEER_L3_PEERING
+Vl4094                         up             up                 MLAG_PEER
+Vx1                            up             up                 Leaf1_VTEP

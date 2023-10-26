@@ -1,0 +1,21 @@
+---
+anta.tests.configuration:
+  - VerifyZeroTouch: # Verifies ZeroTouch is disabled.
+  # - VerifyRunningConfigDiffs:
+
+anta.tests.software:
+  - VerifyEOSVersion:
+      versions:
+        - '4.30.3M-33434233.4303M (engineering build)'
+
+
+anta.tests.connectivity:
+  - VerifyReachability:
+      hosts:
+        - source: Loopback666
+          destination: 8.8.8.8
+          # vrf: MGMT
+        - source: Loopback666
+          destination: 9.9.9.9
+          # vrf: MGMT
+

@@ -85,6 +85,8 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
+clock:
+  timezone: Europe/Paris
 vrfs:
 - name: mgmt
   ip_routing: true

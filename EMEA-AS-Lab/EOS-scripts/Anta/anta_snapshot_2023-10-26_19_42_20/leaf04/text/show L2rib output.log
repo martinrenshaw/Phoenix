@@ -1,0 +1,10 @@
+be79.af5d.aa31, VLAN 1007, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet1
+eeeb.5dd3.8e58, VLAN 1006, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet2
+06ab.3115.27a3, VLAN 10, seq 1, pref 16, evpnDynamicRemoteMac, source: BGP
+   VTEP 10.254.1.1
+0696.d982.5819, VLAN 34, seq 2, pref 16, learnedDynamicMac, source: Local Dynamic
+   Port-Channel19
+0696.d982.5819, VLAN 10, seq 1, pref 16, evpnIntfDynamicMac, source: BGP
+   Port-Channel19

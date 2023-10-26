@@ -12,7 +12,7 @@ tenants:
       GOLD:
         vrf_vni: 999
         bgp:
-          raw_eos_cli: no update wait-install
+          raw_eos_cli: no update wait-install # added to remove from vrfs
         # vtep_diagnostic:
         #   loopback: 100
         #   loopback_ip_range: 10.255.1.0/24

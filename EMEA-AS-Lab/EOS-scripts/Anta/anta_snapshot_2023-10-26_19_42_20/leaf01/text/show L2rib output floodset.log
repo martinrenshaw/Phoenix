@@ -1,0 +1,8 @@
+L2 RIB Output flood set: 
+Source: Local Dynamic, BGP, Local Static, VXLAN Dynamic, Dot1x, MLAG, VXLAN Static
+Vlan        Address Type     Destination
+---- -------------- ---- ---------------
+  10 0000.0000.0000  All VTEP 10.254.1.4
+                         VTEP 10.254.1.3
+
+

@@ -1,28 +1,47 @@
 ---
 anta.tests.configuration:
   - VerifyZeroTouch: # Verifies ZeroTouch is disabled.
-  - VerifyRunningConfigDiffs:
+  # - VerifyRunningConfigDiffs:
 
 anta.tests.software:
   - VerifyEOSVersion:
       versions:
         - '4.30.3M-33434233.4303M (engineering build)'
 
-anta.tests.routing.bgp:
-  - VerifyBGPPeersHealth:
-      address_families:
-        - afi: "evpn"
-        - afi: "ipv4"
-          safi: "unicast"
-          vrf: "default"
-  - VerifyBGPIPv4UnicastCount:
-      vrfs: 
-        default: 2
+# anta.tests.routing.bgp:
+#   - VerifyBGPPeersHealth:
+#       address_families:
+#         - afi: "evpn"
+#         # - afi: "ipv4"
+#         #   safi: "unicast"
+#         #   vrf: "default"
+#   - VerifyBGPIPv4UnicastCount:
+#       vrfs: 
+#         default: 2
+anta.tests.routing:
+  bgp:
+    - VerifyBGPPeerCount:
+          address_families:
+            - afi: "evpn"
+              num_peers: 2
+    - VerifyBGPPeersHealth:
+          address_families:
+            - afi: "evpn"
+    # - VerifyBGPSpecificPeers:
+    # - VerifyBGPEVPNState:
+  ospf:
+    - VerifyOSPFNeighborState:
+  generic:
+    - VerifyRoutingTableEntry:
+        routes: [8.8.8.0 , 9.9.9.0]
+        vrf: GOLD
+          
+
 
 anta.tests.interfaces:
-  - VerifyInterfaceUtilization:
+  # - VerifyInterfaceUtilization:
   - VerifyLoopbackCount:
-      number: 3
+      number: 2
 
 anta.tests.system:
   - VerifyReloadCause:
@@ -33,20 +52,20 @@ anta.tests.mlag:
   - VerifyMlagInterfaces:
   - VerifyMlagConfigSanity:
 
-anta.tests.connectivity:
-  - VerifyReachability:
-      hosts:
-        - source: Vlan110
-          destination: 10.0.10.1
-          # vrf: MGMT
-        - source: Vlan110
-          destination: 10.0.10.2
-          # vrf: MGMT
-  - VerifyLLDPNeighbors:
-      neighbors:
-        - port: Ethernet1
-          neighbor_device: DC1-SPINE1
-          neighbor_port: Ethernet1
-        - port: Ethernet2
-          neighbor_device: DC1-SPINE2
-          neighbor_port: Ethernet1
+# anta.tests.connectivity:
+#   - VerifyReachability:
+#       hosts:
+#         - source: loopback666
+#           destination: 8.8.8.8
+#           # vrf: MGMT
+#         - source: loopback666
+#           destination: 9.9.9.9
+#           # vrf: MGMT
+#   - VerifyLLDPNeighbors:
+#       neighbors:
+#         - port: Ethernet1
+#           neighbor_device: Spine1
+#           neighbor_port: Ethernet1
+#         - port: Ethernet2
+#           neighbor_device: Spine2
+#           neighbor_port: Ethernet1

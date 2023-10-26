@@ -1,0 +1,19 @@
+EVPN instance: VLAN 10
+  Route distinguisher: 10.254.0.1:20010
+  Route target import: Route-Target-AS:20010:20010
+  Route target export: Route-Target-AS:20010:20010
+  Service interface: VLAN-based
+  Local VXLAN IP address: 10.254.1.1
+  VXLAN: enabled
+  MPLS: disabled
+  Remote ethernet segment:
+    ESI: 0000:0000:0101:0102:0044
+    Active TEPs: 10.254.1.3, 10.254.1.4
+EVPN instance: VLAN 12
+  Route distinguisher: 10.254.0.1:20012
+  Route target import: Route-Target-AS:20012:20012
+  Route target export: Route-Target-AS:20012:20012
+  Service interface: VLAN-based
+  Local VXLAN IP address: 10.254.1.1
+  VXLAN: enabled
+  MPLS: disabled

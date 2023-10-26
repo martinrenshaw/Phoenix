@@ -4,7 +4,10 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+  - [DNS Domain](#dns-domain)
   - [IP Name Servers](#ip-name-servers)
+  - [Clock Settings](#clock-settings)
+  - [NTP](#ntp)
   - [Management API HTTP](#management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
@@ -59,6 +62,17 @@ interface Management0
    ip address 172.17.100.2/16
 ```
 
+### DNS Domain
+
+#### DNS domain: mgr.lab
+
+#### DNS Domain Device Configuration
+
+```eos
+dns domain mgr.lab
+!
+```
+
 ### IP Name Servers
 
 #### IP Name Servers Summary
@@ -73,6 +87,45 @@ interface Management0
 ```eos
 ip name-server vrf mgmt 8.8.8.8
 ip name-server vrf mgmt 172.17.0.1
+```
+
+### Clock Settings
+
+#### Clock Timezone Settings
+
+Clock Timezone is set to **Europe/Paris**.
+
+#### Clock Configuration
+
+```eos
+!
+clock timezone Europe/Paris
+```
+
+### NTP
+
+#### NTP Summary
+
+##### NTP Local Interface
+
+| Interface | VRF |
+| --------- | --- |
+| Management0 | mgmt |
+
+##### NTP Servers
+
+| Server | VRF | Preferred | Burst | iBurst | Version | Min Poll | Max Poll | Local-interface | Key |
+| ------ | --- | --------- | ----- | ------ | ------- | -------- | -------- | --------------- | --- |
+| fr.pool.ntp.org | mgmt | - | True | True | - | - | - | Management0 | - |
+| uk.pool.ntp.org | mgmt | True | True | True | - | - | - | Management0 | - |
+
+#### NTP Device Configuration
+
+```eos
+!
+ntp local-interface vrf mgmt Management0
+ntp server vrf mgmt fr.pool.ntp.org burst iburst local-interface Management0
+ntp server vrf mgmt uk.pool.ntp.org prefer burst iburst local-interface Management0
 ```
 
 ### Management API HTTP

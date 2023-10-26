@@ -44,6 +44,26 @@ name_servers:
   - 8.8.8.8
 
 # NTP Servers IP or DNS name, first NTP server will be prefered, and sourced from Managment VRF
-ntp_servers:
- - time.google.com
- - time.facebook.com
+# ntp_servers:
+#   - 51.89.151.183
+#   - 188.114.116.1
+timezone: Europe/Paris
+ntp:
+  local_interface:
+    name: Management0
+    vrf: mgmt
+  servers:
+    - name: fr.pool.ntp.org
+      local_interface: Management0
+      vrf: mgmt
+      burst: True
+      iburst: True
+    - name: uk.pool.ntp.org
+      preferred: True
+      local_interface: Management0
+      vrf: mgmt
+      burst: True
+      iburst: True
+
+# dns domain
+dns_domain: mgr.lab

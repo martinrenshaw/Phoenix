@@ -1,0 +1,16 @@
+System information
+  Model                    Description                                         
+  ------------------------ ----------------------------------------------------
+  cEOSLab                  cEOSLab                                             
+
+  HW Version  Serial Number                    Mfg Date   Epoch
+  ----------- -------------------------------- ---------- -----
+              7BD31FB6E9816B6D6A14F7D7B8740243                 
+
+System has 21 ports
+  Type               Count
+  ------------------ ----
+  Management         1   
+  Switched           18  
+  SwitchedBootstrap  2   
+

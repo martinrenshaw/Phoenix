@@ -1,0 +1,9 @@
+VLAN  Name                             Status    Ports
+----- -------------------------------- --------- -------------------------------
+1     default                          active    Et1, Et2, Et3, Et4, Et5, Et6
+                                                 Et7, Et8, Et9, Et10, Et11, Et12
+                                                 Et13, Et14, Et15, Et16, Et17
+                                                 Et18, Po10
+10    VLAN0010                         active    Cpu, Po10
+34    vLAN_34_transit                  active    Cpu, Po10
+

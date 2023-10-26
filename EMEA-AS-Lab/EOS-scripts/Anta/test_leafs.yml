@@ -1,0 +1,67 @@
+---
+anta.tests.configuration:
+  - VerifyZeroTouch: # Verifies ZeroTouch is disabled.
+  # - VerifyRunningConfigDiffs:
+
+anta.tests.software:
+  - VerifyEOSVersion:
+      versions:
+        - '4.30.3M-33434233.4303M (engineering build)'
+
+anta.tests.vxlan:
+ - VerifyVxlan1Interface:
+ - VerifyVxlanConfigSanity:
+
+anta.tests.routing:
+  bgp:
+    - VerifyBGPPeerCount:
+          address_families:
+            - afi: "evpn"
+              num_peers: 2
+    - VerifyBGPPeersHealth:
+          address_families:
+            - afi: "evpn"
+    # - VerifyBGPSpecificPeers:
+    # - VerifyBGPEVPNState:
+  ospf:
+    - VerifyOSPFNeighborState:
+  generic:
+    - VerifyRoutingProtocolModel:
+        model: multi-agent
+    - VerifyRoutingTableEntry:
+        routes: [8.8.8.0 , 9.9.9.0] # check to ensure the eBGP routes from host1 &  2 are seen on the leafs
+        vrf: GOLD
+          
+
+
+anta.tests.interfaces:
+  # - VerifyInterfaceUtilization:
+  - VerifyLoopbackCount:
+      number: 2
+
+anta.tests.system:
+  - VerifyReloadCause:
+  - VerifyNTP:
+
+anta.tests.mlag:
+  - VerifyMlagStatus:
+  - VerifyMlagInterfaces:
+  - VerifyMlagConfigSanity:
+
+# anta.tests.connectivity:
+#   - VerifyReachability:
+#       hosts:
+#         - source: loopback666
+#           destination: 8.8.8.8
+#           # vrf: MGMT
+#         - source: loopback666
+#           destination: 9.9.9.9
+#           # vrf: MGMT
+#   - VerifyLLDPNeighbors:
+#       neighbors:
+#         - port: Ethernet1
+#           neighbor_device: Spine1
+#           neighbor_port: Ethernet1
+#         - port: Ethernet2
+#           neighbor_device: Spine2
+#           neighbor_port: Ethernet1

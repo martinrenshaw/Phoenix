@@ -1,0 +1,10 @@
+VLAN  Name                             Status    Ports
+----- -------------------------------- --------- -------------------------------
+1     default                          active    Et3, Et4, Et5, Et6, Et7, Et8
+                                                 Et9, Et11, Et12, Et13, Et14
+                                                 Et15, Et16, Et17, Et18, Et19
+10    Tenant_A_client_l2_only          active    Po19, Vx1
+34    Gold_data                        active    Cpu, Et10, Po19, Vx1
+1199* VLAN1199                         active    Cpu, Vx1
+
+* indicates a Dynamic VLAN

@@ -68,6 +68,7 @@ router_bgp:
         - 999:999
     redistribute_routes:
     - source_protocol: connected
+    eos_cli: no update wait-install
     neighbors:
     - ip_address: 10.253.0.0
       peer_group: MLAG-IPv4-UNDERLAY-PEER

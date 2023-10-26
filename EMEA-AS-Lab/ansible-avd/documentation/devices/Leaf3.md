@@ -593,6 +593,8 @@ router bgp 65102
       !
       address-family ipv4
          neighbor 10.34.34.50 activate
+      !
+      no update wait-install
 ```
 
 ## BFD

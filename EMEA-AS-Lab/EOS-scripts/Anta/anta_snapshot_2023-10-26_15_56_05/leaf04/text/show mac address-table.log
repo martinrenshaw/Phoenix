@@ -1,0 +1,17 @@
+          Mac Address Table
+------------------------------------------------------------------
+
+Vlan    Mac Address       Type        Ports      Moves   Last Move
+----    -----------       ----        -----      -----   ---------
+  34    001c.7300.dc01    STATIC      Cpu
+  34    0696.d982.5819    DYNAMIC     Po19       2       21:27:01 ago
+1199    001c.7300.dc01    STATIC      Cpu
+1199    06a8.b418.5136    DYNAMIC     Vx1        1       21:00:43 ago
+Total Mac Addresses for this criterion: 4
+
+          Multicast Mac Address Table
+------------------------------------------------------------------
+
+Vlan    Mac Address       Type        Ports
+----    -----------       ----        -----
+Total Mac Addresses for this criterion: 0

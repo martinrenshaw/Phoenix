@@ -1,0 +1,6 @@
+aaaf.7de5.bf9d, VLAN 1007, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet2
+52fe.6804.2aee, VLAN 1006, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic
+   Ethernet1
+0696.d982.5819, VLAN 34, seq 2, pref 16, learnedDynamicMac, source: Local Dynamic
+   Port-Channel19

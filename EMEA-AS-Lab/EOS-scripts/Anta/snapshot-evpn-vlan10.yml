@@ -10,7 +10,7 @@ text_format:
   - show bgp evpn route-type ip-prefix ipv4 vni 20010 detail # type-5
   - show bgp evpn route-type mac-ip vni 20010 detail # type-2 detailed
   - show bgp evpn route-type mac-ip vni 20010 # type-2
-  - show bgp evpn route-type ethernet-segment vni 20010 detail # type-4
+  - show bgp evpn route-type ethernet-segment detail # type-4 no VNI
   - show bgp evpn route-type imet vni 20010 detail # type-3  
   - show bgp evpn instance
   - show bgp evpn detail

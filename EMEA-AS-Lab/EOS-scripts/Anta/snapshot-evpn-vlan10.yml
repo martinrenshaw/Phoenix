@@ -1,0 +1,25 @@
+#json_format:
+#  - show version
+text_format:
+
+  - show ip bgp summary vrf all
+  - show bgp evpn summary
+  - show bgp evpn
+  - show ip route vrf all
+  - show bgp evpn route-type auto-discovery vni 20010 detail # type-1
+  - show bgp evpn route-type ip-prefix ipv4 vni 20010 detail # type-5
+  - show bgp evpn route-type mac-ip vni 20010 detail # type-2 detailed
+  - show bgp evpn route-type mac-ip vni 20010 # type-2
+  - show bgp evpn route-type ethernet-segment vni 20010 detail # type-4
+  - show bgp evpn route-type imet vni 20010 detail # type-3  
+  - show bgp evpn instance
+  - show bgp evpn detail
+  - show L2rib input all
+  - show L2rib input all floodset
+  - show L2rib output
+  - show L2rib output floodset
+  # - show running-config # not licked by eAPI??
+  - show vxlan address-table
+  - show vxlan vtep
+  - show bgp evpn sanity detail
+  - show mac address-table

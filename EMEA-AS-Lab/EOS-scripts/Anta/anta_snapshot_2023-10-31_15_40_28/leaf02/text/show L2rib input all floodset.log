@@ -1,0 +1,33 @@
+L2 RIB local dynamic Input flood set: 
+Vlan Address Type Destination
+---- ------- ---- -----------
+
+L2 RIB MLAG Input flood set: 
+Vlan Address Type Destination
+---- ------- ---- -----------
+
+L2 RIB VXLAN dynamic Input flood set: 
+Vlan Address Type Destination
+---- ------- ---- -----------
+
+L2 RIB Dot1x Input flood set: 
+Vlan Address Type Destination
+---- ------- ---- -----------
+
+L2 RIB EVPN Input flood set: 
+Vlan        Address Type     Destination
+---- -------------- ---- ---------------
+  10 0000.0000.0000  All VTEP 10.254.1.4
+                         VTEP 10.254.1.3
+  11 0000.0000.0000  All VTEP 10.254.1.4
+                         VTEP 10.254.1.3
+
+L2 RIB VXLAN static Input flood set: 
+Vlan Address Type Destination
+---- ------- ---- -----------
+
+L2 RIB local static Input flood set: 
+Vlan Address Type Destination
+---- ------- ---- -----------
+
+

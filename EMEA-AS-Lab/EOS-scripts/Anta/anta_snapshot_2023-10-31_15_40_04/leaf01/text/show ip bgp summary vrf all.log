@@ -1,0 +1,11 @@
+BGP summary information for VRF default
+Router identifier 10.254.0.1, local AS number 65101
+Neighbor Status Codes: m - Under maintenance
+  Description              Neighbor V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+
+BGP summary information for VRF GOLD
+Router identifier 10.254.0.1, local AS number 65101
+Neighbor Status Codes: m - Under maintenance
+  Description              Neighbor    V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  bgp peering to host1     10.12.12.50 4 64998            274       277    0    0 03:48:23 Estab   1      1
+  Leaf2                    10.253.0.1  4 65101            278       276    0    0 03:48:23 Estab   3      3

@@ -228,6 +228,7 @@ vlan internal order ascending range 1006 1199
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
 | 10 | Tenant_A_client_l2_only | - |
+| 11 | check_esi_DF_odd-even | - |
 | 34 | Gold_data | - |
 
 ### VLANs Device Configuration
@@ -236,6 +237,9 @@ vlan internal order ascending range 1006 1199
 !
 vlan 10
    name Tenant_A_client_l2_only
+!
+vlan 11
+   name check_esi_DF_odd-even
 !
 vlan 34
    name Gold_data
@@ -252,7 +256,7 @@ vlan 34
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet10 |  PC-1_Eth1 | access | 34 | - | - | - |
-| Ethernet20 | host02_Eth2 | *trunk | *10,34,55 | *- | *- | 19 |
+| Ethernet20 | host02_Eth2 | *trunk | *10-11,34,55,134 | *- | *- | 19 |
 
 *Inherited from Port-Channel Interface
 
@@ -306,7 +310,7 @@ interface Ethernet20
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel19 | host02_PortChannel to Host2 | switched | trunk | 10,34,55 | - | - | - | - | - | 0000:0000:0101:0102:0044 |
+| Port-Channel19 | host02_PortChannel to Host2 | switched | trunk | 10-11,34,55,134 | - | - | - | - | - | 0000:0000:0101:0102:0044 |
 
 ##### EVPN Multihoming
 
@@ -324,7 +328,7 @@ interface Port-Channel19
    description host02_PortChannel to Host2
    no shutdown
    switchport
-   switchport trunk allowed vlan 10,34,55
+   switchport trunk allowed vlan 10-11,34,55,134
    switchport mode trunk
    evpn ethernet-segment
       identifier 0000:0000:0101:0102:0044
@@ -409,6 +413,7 @@ interface Vlan34
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
 | 10 | 20010 | - | - |
+| 11 | 20011 | - | - |
 | 34 | 20034 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
@@ -426,6 +431,7 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan udp-port 4789
    vxlan vlan 10 vni 20010
+   vxlan vlan 11 vni 20011
    vxlan vlan 34 vni 20034
    vxlan vrf GOLD vni 999
 ```
@@ -580,6 +586,7 @@ router ospf 100
 | VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
 | ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
 | 10 | 10.254.0.4:20010 | 20010:20010 | - | - | learned |
+| 11 | 10.254.0.4:20011 | 20011:20011 | - | - | learned |
 | 34 | 10.254.0.4:20034 | 20034:20034 | - | - | learned |
 
 #### Router BGP VRFs
@@ -619,6 +626,11 @@ router bgp 65103
    vlan 10
       rd 10.254.0.4:20010
       route-target both 20010:20010
+      redistribute learned
+   !
+   vlan 11
+      rd 10.254.0.4:20011
+      route-target both 20011:20011
       redistribute learned
    !
    vlan 34

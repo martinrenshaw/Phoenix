@@ -1,0 +1,6 @@
+BGP summary information for VRF default
+Router identifier 9.9.9.9, local AS number 64998
+Neighbor Status Codes: m - Under maintenance
+  Neighbor   V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  10.12.12.2 4 65101            213       211    0    0 02:53:40 Estab   2      2
+  10.12.12.3 4 65101            213       215    0    0 02:53:39 Estab   2      2

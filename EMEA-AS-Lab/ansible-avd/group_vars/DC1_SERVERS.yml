@@ -4,10 +4,10 @@
 port_profiles:
   Hosts1:
     mode: trunk
-    vlans: "10,12"
+    vlans: "10-12"
   Hosts2:
     mode: trunk
-    vlans: "10,34,55"
+    vlans: "10-11,34,55,134"
   Old_Gold_B:
     mode: trunk
     vlans: "210-211"

@@ -104,23 +104,38 @@ tenants:
         #     bfd: < true | false >
 
 
-      Old_Gold_WEB_Zone:
-        vrf_vni: 11
+      Crimson:
+        vrf_vni: 111
+        bgp:
+          raw_eos_cli: no update wait-install # added to remove from vrfs
         svis:
-          120:
-            name: Old_Gold_WEB_Zone_1
-            tags: [web, erp1]
+          112:
+            name: Crimson_data
+            tags: [crimson_112] # see node groups in the FABRIC vars
             enabled: true
-            # ip_subnet: 10.1.20.0/24
-  #         121:
-  #           name: Old_Gold_WEB_Zone_2
-  #           tags: [web]
-  #           enabled: true
-  #           ip_subnet: 10.1.21.0/24
+            ip_virtual_router_addresses: ["10.112.112.1"]
+            nodes:
+             Leaf1:
+              ip_address: 10.112.112.2/24
+             Leaf2:
+              ip_address: 10.112.112.3/24
+          134:
+            name: Crimson_data
+            tags: [crimson_134]
+            enabled: true
+            ip_virtual_router_addresses: ["10.134.134.1"]
+            nodes:
+             Leaf3:
+              ip_address: 10.134.134.2/24
+             Leaf4:
+              ip_address: 10.134.134.3/24
 
     l2vlans:
       10:
         name: Tenant_A_client_l2_only
+        tags: [vmotion]
+      11:
+        name: check_esi_DF_odd-even
         tags: [vmotion]
       161:
         vni_override: 55161

@@ -1,0 +1,61 @@
+Category Check Status Detail                                    
+-------- ----- ------ ------------------------------------------
+General  Send  OK                                               
+         comm\                                                  
+         unity                                                  
+General  Mult\ OK                                               
+         i-ag\                                                  
+         ent                                                    
+         mode                                                   
+General  Neig\ WARN   Following EVPN sessions are not           
+         hbor         established: 10.252.0.2                   
+         esta\                                                  
+         blis\                                                  
+         hed                                                    
+L2       MAC-\ OK                                               
+         VRF                                                    
+         rout\                                                  
+         e-ta\                                                  
+         rget                                                   
+         impo\                                                  
+         rt                                                     
+         and                                                    
+         expo\                                                  
+         rt                                                     
+L2       MAC-\ OK                                               
+         VRF                                                    
+         rout\                                                  
+         e-di\                                                  
+         stin\                                                  
+         guis\                                                  
+         her                                                    
+L2       MAC-\ OK                                               
+         VRF                                                    
+         redi\                                                  
+         stri\                                                  
+         bute                                                   
+L2       MAC-\ OK                                               
+         VRF                                                    
+         over\                                                  
+         lapp\                                                  
+         ing                                                    
+         VLAN                                                   
+L2       Supp\ OK                                               
+         ress\                                                  
+         ed                                                     
+         MAC                                                    
+VXLAN    VLAN  OK                                               
+         to                                                     
+         VNI                                                    
+         map                                                    
+         for                                                    
+         MAC-\                                                  
+         VRF                                                    
+VXLAN    VRF   OK                                               
+         to                                                     
+         VNI                                                    
+         map                                                    
+         for                                                    
+         IP-V\                                                  
+         RF                                                     
+

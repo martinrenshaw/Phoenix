@@ -1,0 +1,16 @@
+BGP routing table information for VRF default
+Router identifier 10.254.0.2, local AS number 65101
+BGP routing table entry for mac-ip 020f.ce23.bb7e, Route Distinguisher: 10.254.0.4:20010
+ Paths: 1 available
+  65001 65103
+    10.254.1.4 from 10.252.0.1 (10.252.0.1)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: Route-Target-AS:20010:20010 TunnelEncap:tunnelTypeVxlan
+      VNI: 20010 ESI: 0000:0000:0101:0102:0044
+BGP routing table entry for mac-ip 06ab.3115.27a3, Route Distinguisher: 10.254.0.2:20010
+ Paths: 1 available
+  Local
+    - from - (0.0.0.0)
+      Origin IGP, metric -, localpref -, weight 0, tag 0, valid, local, best
+      Extended Community: Route-Target-AS:20010:20010 TunnelEncap:tunnelTypeVxlan
+      VNI: 20010 ESI: 0000:0000:0000:0000:0000

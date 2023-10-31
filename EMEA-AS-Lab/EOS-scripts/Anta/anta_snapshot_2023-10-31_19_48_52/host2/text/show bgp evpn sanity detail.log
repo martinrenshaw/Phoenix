@@ -1,0 +1,14 @@
+Category Check                Status Detail
+-------- -------------------- ------ ------
+General  Send community       OK           
+General  Multi-agent mode     OK           
+General  Neighbor established OK           
+L2       MAC-VRF route-target OK           
+         import and export                 
+L2       MAC-VRF              OK           
+         route-distinguisher               
+L2       MAC-VRF redistribute OK           
+L2       MAC-VRF overlapping  OK           
+         VLAN                              
+L2       Suppressed MAC       OK           
+

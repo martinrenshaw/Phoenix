@@ -19,7 +19,7 @@ text_format:
   - show L2rib output
   - show L2rib output floodset
   # - show running-config # not licked by eAPI??
-  - show vxlan address-table
+  - show vxlan address-table vlan 10
   - show vxlan vtep
   - show bgp evpn sanity detail
-  - show mac address-table
+  - show mac address-table vlan 10

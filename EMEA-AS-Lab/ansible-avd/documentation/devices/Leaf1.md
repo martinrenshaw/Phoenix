@@ -107,13 +107,13 @@ ip name-server vrf mgmt 172.17.0.1
 
 #### Clock Timezone Settings
 
-Clock Timezone is set to **Europe/Paris**.
+Clock Timezone is set to **Europe/London**.
 
 #### Clock Configuration
 
 ```eos
 !
-clock timezone Europe/Paris
+clock timezone Europe/London
 ```
 
 ### NTP
@@ -763,6 +763,7 @@ router bgp 65101
       update wait-install
       neighbor 10.12.12.50 remote-as 64998
       neighbor 10.12.12.50 description bgp peering to host1
+      neighbor 10.12.12.50 route-map RM-GOLD-10.12.12.50-SET-NEXT-HOP-OUT out
       neighbor 10.253.0.1 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
       !
@@ -811,6 +812,12 @@ router bfd
 
 #### Route-maps Summary
 
+##### RM-GOLD-10.12.12.50-SET-NEXT-HOP-OUT
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | - | ip next-hop 10.12.12.1 | - | - |
+
 ##### RM-MLAG-PEER-IN
 
 | Sequence | Type | Match | Set | Sub-Route-Map | Continue |
@@ -820,6 +827,9 @@ router bfd
 #### Route-maps Device Configuration
 
 ```eos
+!
+route-map RM-GOLD-10.12.12.50-SET-NEXT-HOP-OUT permit 10
+   set ip next-hop 10.12.12.1
 !
 route-map RM-MLAG-PEER-IN permit 10
    description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing

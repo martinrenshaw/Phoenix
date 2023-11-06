@@ -93,13 +93,13 @@ ip name-server vrf mgmt 172.17.0.1
 
 #### Clock Timezone Settings
 
-Clock Timezone is set to **Europe/Paris**.
+Clock Timezone is set to **Europe/London**.
 
 #### Clock Configuration
 
 ```eos
 !
-clock timezone Europe/Paris
+clock timezone Europe/London
 ```
 
 ### NTP

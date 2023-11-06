@@ -76,6 +76,7 @@ tenants:
             remote_as: 64998
             description: bgp peering to host1
             nodes: [ Leaf1, Leaf2 ]
+            set_ipv4_next_hop: 10.12.12.1 # dynamically crete route-map, needed for correct IRB order
           10.34.34.50:
             remote_as: 64999
             description: bgp peering to host2
@@ -93,7 +94,7 @@ tenants:
             nodes: [ Leaf3, Leaf4 ]
         #     # Next hop settings can be either ipv4 or ipv6 for one neighbor, this will be applied by a uniquely generated route-map per neighbor.
         #     # Next hop takes precedence over route_map_out.
-        #     set_ipv4_next_hop: < IPv4_address >
+            set_ipv4_next_hop: 10.34.34.1
         #     set_ipv6_next_hop: < IPv6_address >
         #     route_map_out: < route-map name >
         #     route_map_in: < route-map name >

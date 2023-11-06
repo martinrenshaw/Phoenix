@@ -47,7 +47,7 @@ name_servers:
 # ntp_servers:
 #   - 51.89.151.183
 #   - 188.114.116.1
-timezone: Europe/Paris
+timezone: Europe/London
 ntp:
   local_interface:
     name: Management0

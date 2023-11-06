@@ -1,9 +1,9 @@
 import pyeapi
 
 # Define the eAPI connection parameters
-hostname = "your_eos_device_ip"
-username = "your_username"
-password = "your_password"
+hostname = "172.17.100.3"
+username = "arista"
+password = "arista123"
 
 # Define the interface you want to shut down
 interface = "Ethernet1"

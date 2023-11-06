@@ -68,6 +68,7 @@ router_bgp:
       description: bgp peering to host2
       send_community: extended
       ebgp_multihop: 10
+      route_map_out: RM-GOLD-10.34.34.50-SET-NEXT-HOP-OUT
     updates:
       wait_install: true
   vlans:
@@ -134,7 +135,7 @@ local_users:
   role: network-admin
   sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
 clock:
-  timezone: Europe/Paris
+  timezone: Europe/London
 vrfs:
 - name: mgmt
   ip_routing: true
@@ -247,6 +248,13 @@ vlan_interfaces:
   ip_virtual_router_addresses:
   - 10.34.34.1
   vrf: GOLD
+route_maps:
+- name: RM-GOLD-10.34.34.50-SET-NEXT-HOP-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    set:
+    - ip next-hop 10.34.34.1
 vxlan_interface:
   Vxlan1:
     description: Leaf4_VTEP

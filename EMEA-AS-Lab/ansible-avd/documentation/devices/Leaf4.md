@@ -38,6 +38,8 @@
   - [Router BFD](#router-bfd)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
+- [Filters](#filters)
+  - [Route-maps](#route-maps)
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
@@ -102,13 +104,13 @@ ip name-server vrf mgmt 172.17.0.1
 
 #### Clock Timezone Settings
 
-Clock Timezone is set to **Europe/Paris**.
+Clock Timezone is set to **Europe/London**.
 
 #### Clock Configuration
 
 ```eos
 !
-clock timezone Europe/Paris
+clock timezone Europe/London
 ```
 
 ### NTP
@@ -654,6 +656,7 @@ router bgp 65103
       neighbor 10.34.34.50 description bgp peering to host2
       neighbor 10.34.34.50 ebgp-multihop 10
       neighbor 10.34.34.50 send-community extended
+      neighbor 10.34.34.50 route-map RM-GOLD-10.34.34.50-SET-NEXT-HOP-OUT out
       redistribute connected
       !
       address-family ipv4
@@ -693,6 +696,26 @@ router bfd
 #### IP IGMP Snooping Device Configuration
 
 ```eos
+```
+
+## Filters
+
+### Route-maps
+
+#### Route-maps Summary
+
+##### RM-GOLD-10.34.34.50-SET-NEXT-HOP-OUT
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | - | ip next-hop 10.34.34.1 | - | - |
+
+#### Route-maps Device Configuration
+
+```eos
+!
+route-map RM-GOLD-10.34.34.50-SET-NEXT-HOP-OUT permit 10
+   set ip next-hop 10.34.34.1
 ```
 
 ## VRF Instances

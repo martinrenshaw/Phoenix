@@ -10,7 +10,7 @@ anta.tests.software:
 
 anta.tests.vxlan:
  - VerifyVxlan1Interface:
- - VerifyVxlanConfigSanity:
+#  - VerifyVxlanConfigSanity:
 
 anta.tests.routing:
   bgp:

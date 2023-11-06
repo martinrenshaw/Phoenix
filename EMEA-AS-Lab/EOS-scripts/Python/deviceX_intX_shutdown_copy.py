@@ -83,3 +83,23 @@ def get_rt2():
         # print("\n"+80*'='+'='*40+"\n")
 
 get_rt2()
+
+def get_rt5():
+    """ Get Devices """
+    pt = PrettyTable()
+    pt.field_names = ["Role", "Name", "FabricState","Adst"]
+    for leaf in leafs:
+        # Connect to the Arista switch using eAPI
+        connection = pyeapi.connect_to(leaf)
+        # Send the command to retrieve MLAG status
+        response = connection.enable('show bgp evpn route-type ip-prefix ipv4')
+        # Parse the response for MLAG status
+        bgp_evpnRt2 = response[0]['result']['evpnRoutes']
+        # Print the response from switch
+        print("\n"+40*'='+' GET ALL RouteType-5 '+leaf+' '+'='*40+"\n")
+        for key, value in bgp_evpnRt2.items():
+            print (key)
+        # print(bgp_evpnRt2)
+        # print("\n"+80*'='+'='*40+"\n")
+
+get_rt5()

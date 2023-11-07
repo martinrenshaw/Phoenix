@@ -7,33 +7,20 @@ import requests
 from datetime import datetime
 from prettytable import PrettyTable, ALL, FRAME, from_json
 
+pp = pprint.PrettyPrinter()
+
 #double check you have the .eapi.conf in the correct dir
 
 # list of all leaf swiches
 leafs = ['leaf1','leaf2','leaf3','leaf4']
 # list of all spine switches
 spines = ['spine1','spine2']
+# list of end host for ping tests
+hosts = ['host1','host2']
 
-# Connect to the Arista switch using eAPI
-connection = pyeapi.connect_to('leaf1')
-
-# Send the command to retrieve MLAG status
-response = connection.enable('show mlag')
-
-# Print the MLAG status
-# print(response)
-
-# Parse the response for MLAG status
-mlag_status = response[0]['result']['state']
-mlag_sysmac = response[0]['result']['systemId']
-
-# Print the MLAG status
-# print(mlag_status)
-
-# Print the MLAG SysMAC
-# print(mlag_sysmac)
-
-
+## Todo , write file to output in local Dir
+## Filter the response msg from the pings, only show [-2] second to last index in list
+## Use PrettyTable to present info in a nicer format.
 
 def write_output(data, funcname):
     """ Write a file to the present working directory """
@@ -62,6 +49,57 @@ def append_new_line(file_name, text_to_append):
         file_object.write(text_to_append)
     sys.stdout = original
 
+
+def ping_l2hosts():
+    """ Get Devices """
+    pt = PrettyTable()
+    pt.field_names = ["Role", "Name", "FabricState","Adst"]
+    for host in hosts:
+        # Connect to the Arista switch using eAPI
+        connection = pyeapi.connect_to(host)
+        # Send the command to ping both loopbacks for h1
+        ping_hx = connection.enable('ping 10.10.10.1')
+        # Parse the response for MLAG status
+        ping_response = ping_hx[0]['result']['messages']
+        # Print the response from switch
+        print("\n"+40*'='+' Ping 10.10.10.1 Host1, from '+host+' '+'='*40+"\n")
+        pp.pprint(ping_response)
+        # Send the command to ping both loopbacks for h2
+        ping_hx = connection.enable('ping 10.10.10.2')
+        # Parse the response for MLAG status
+        ping_response = ping_hx[0]['result']['messages']
+        # Print the response from switch
+        print("\n"+40*'='+' Ping 10.10.10.2 Host2, from '+host+' '+'='*40+"\n")
+        pp.pprint(ping_response)
+
+
+ping_l2hosts()
+
+def ping_l3hosts():
+    """ Get Devices """
+    pt = PrettyTable()
+    pt.field_names = ["Role", "Name", "FabricState","Adst"]
+    for host in hosts:
+        # Connect to the Arista switch using eAPI
+        connection = pyeapi.connect_to(host)
+        # Send the command to ping both loopbacks for h1
+        ping_hx = connection.enable('ping 9.9.9.9')
+        # Parse the response for MLAG status
+        ping_response = ping_hx[0]['result']['messages']
+        # Print the response from switch
+        print("\n"+40*'='+' Ping 9.9.9.9 Host1, from '+host+' '+'='*40+"\n")
+        pp.pprint(ping_response)
+        # Send the command to ping both loopbacks for h2
+        ping_hx = connection.enable('ping 8.8.8.8')
+        # Parse the response for MLAG status
+        ping_response = ping_hx[0]['result']['messages']
+        # Print the response from switch
+        print("\n"+40*'='+' Ping 8.8.8.8 Host2, from '+host+' '+'='*40+"\n")
+        pp.pprint(ping_response)
+
+
+ping_l3hosts()
+
 ### Get the All the Fabric EVPN Route-type 2's
 
 def get_rt2():
@@ -73,9 +111,9 @@ def get_rt2():
         connection = pyeapi.connect_to(leaf)
         # Send the command to retrieve MLAG status
         response = connection.enable('show bgp evpn route-type mac-ip')
-        # Parse the response for MLAG status
+        # Parse the response 
         bgp_evpnRt2 = response[0]['result']['evpnRoutes']
-        # Print the response from switch
+        # Print the response from switchs
         print("\n"+40*'='+' GET ALL RouteType-2 '+leaf+' '+'='*40+"\n")
         for key, value in bgp_evpnRt2.items():
             print (key)
@@ -93,13 +131,15 @@ def get_rt5():
         connection = pyeapi.connect_to(leaf)
         # Send the command to retrieve MLAG status
         response = connection.enable('show bgp evpn route-type ip-prefix ipv4')
-        # Parse the response for MLAG status
-        bgp_evpnRt2 = response[0]['result']['evpnRoutes']
-        # Print the response from switch
+        # Parse the response 
+        bgp_evpnRt5 = response[0]['result']['evpnRoutes']
+        # Print the response from switchs
         print("\n"+40*'='+' GET ALL RouteType-5 '+leaf+' '+'='*40+"\n")
-        for key, value in bgp_evpnRt2.items():
+        for key, value in bgp_evpnRt5.items():
             print (key)
         # print(bgp_evpnRt2)
         # print("\n"+80*'='+'='*40+"\n")
 
 get_rt5()
+
+

@@ -8,8 +8,8 @@ DC1:
         ansible_httpapi_use_ssl: true
         ansible_httpapi_validate_certs: false
         ansible_httpapi_port: 443
-        ansible_user: arista
-        ansible_password: arista123
+        ansible_user: admin
+        ansible_password: admin
         ansible_network_os: arista.eos.eos
         # Configure privilege escalation
         ansible_become: true
@@ -18,19 +18,19 @@ DC1:
         DC1_SPINES:
           hosts:
             Spine1:
-              ansible_host: 172.17.100.1
+              ansible_host: clab-EVPN-Overlaid-spine1
             Spine2:
-              ansible_host: 172.17.100.2
+              ansible_host: clab-EVPN-Overlaid-spine2
         DC1_L3LEAFS:
           hosts:
             Leaf1:
               ansible_host: clab-EVPN-Overlaid-leaf1
             Leaf2:
-              ansible_host: 172.17.100.4
+              ansible_host: clab-EVPN-Overlaid-leaf2
             Leaf3:
-              ansible_host: 172.17.100.5
+              ansible_host: clab-EVPN-Overlaid-leaf3
             Leaf4:
-              ansible_host: 172.17.100.6
+              ansible_host: clab-EVPN-Overlaid-leaf4
     DC1_TENANTS_NETWORKS:
       children:
         DC1_L3LEAFS:

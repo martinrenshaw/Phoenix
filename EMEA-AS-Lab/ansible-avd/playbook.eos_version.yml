@@ -9,4 +9,4 @@
 
     - name: Print switch EOS version
       debug:
-        msg: " {{ inventory_hostname }} is running {{ version.stdout[0] }} "
+        msg: " {{ ansible_host }} is running {{ version.stdout[0] }} "

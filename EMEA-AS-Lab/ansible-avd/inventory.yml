@@ -24,7 +24,7 @@ DC1:
         DC1_L3LEAFS:
           hosts:
             Leaf1:
-              ansible_host: 172.17.100.3
+              ansible_host: clab-EVPN-Overlaid-leaf1
             Leaf2:
               ansible_host: 172.17.100.4
             Leaf3:

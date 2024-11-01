@@ -1,5 +1,6 @@
 - name: Collect EOS version
   hosts: DC1
+  connection: local
   gather_facts: false
   tasks:
     - name: Get switch EOS version
@@ -9,4 +10,4 @@
 
     - name: Print switch EOS version
       debug:
-        msg: " {{ ansible_host }} is running {{ version.stdout[0] }} "
+        msg: " {{ inventory_hostname }} is running {{ version.stdout[0] }} "

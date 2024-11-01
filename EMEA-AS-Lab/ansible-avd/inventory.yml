@@ -4,6 +4,7 @@ DC1:
     DC1_FABRIC:
       vars:
         #ansible_network_os: eos
+        # ansible_httpapi_host: localhost
         ansible_connection: httpapi
         ansible_httpapi_use_ssl: true
         ansible_httpapi_validate_certs: false
@@ -24,7 +25,7 @@ DC1:
         DC1_L3LEAFS:
           hosts:
             Leaf1:
-              ansible_host: clab-EVPN-Overlaid-leaf1
+              ansible_host: 172.20.20.8
             Leaf2:
               ansible_host: clab-EVPN-Overlaid-leaf2
             Leaf3:
